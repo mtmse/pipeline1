@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<poolman>
+
+	<management-mode>local</management-mode>
+	<datasource>
+
+		<dbname>ndstest</dbname>
+		<jndiName>NDSDS</jndiName>
+		<!-- <jndiName>jndi-ndstest</jndiName> -->
+		<driver>org.postgresql.Driver</driver>
+		<url>jdbc:postgresql://localhost:5432/ndstest</url>
+		<username>tpb-admin</username>
+		<password>tpb-admin</password>
+
+		<txIsolationLevel>READ_COMMITTED</txIsolationLevel>
+
+		<nativeResults>true</nativeResults>
+
+		<poolPreparedStatements>false</poolPreparedStatements>
+
+		<initialConnections>2</initialConnections>
+		<minimumSize>0</minimumSize>
+		<maximumSize>40</maximumSize>
+		<maximumSoft>true</maximumSoft>
+
+		<connectionTimeout>600</connectionTimeout>
+		<userTimeout>12</userTimeout>
+		<shrinkBy>7</shrinkBy>
+<!-- 		<logFile>db-poolman.log</logFile>-->
+		<debugging>false</debugging>
+
+		<cacheEnabled>true</cacheEnabled>
+		<cacheSize>10</cacheSize>
+		<cacheRefreshInterval>120</cacheRefreshInterval>
+
+	</datasource>
+
+</poolman>
+
+
+
+

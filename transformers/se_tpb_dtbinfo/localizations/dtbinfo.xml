@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE localization SYSTEM "localization.dtd"> -->
+<localization version="2007-1">
+	<head>
+		<meta name="loc:target" content="../dtbinfo.xsl"/>
+		<meta name="dc:Date" content="2007-01-31"/>
+		<meta name="dc:Creator" content="Joel Håkansson"/>
+	</head>
+	<body>
+		<language xml:lang="sv">
+			<lookup ref="numbers">
+				<item name="2" value="två"/>
+				<item name="3" value="tre"/>
+				<item name="4" value="fyra"/>
+				<item name="5" value="fem"/>
+				<item name="6" value="sex"/>
+				<item name="7" value="sju"/>
+				<item name="8" value="åtta"/>
+				<item name="9" value="nio"/>
+				<item name="10" value="tio"/>
+				<item name="11" value="elva"/>
+				<item name="12" value="tolv"/>
+			</lookup>
+			<lookup ref="publishers">
+				<item name="TPB" value="Talboks- och punktskriftsbiblioteket"/>
+				<item name="MTM" value="Myndigheten för tillgängliga medier"/>
+				<item name="SIT" value="Specialpedagogiska institutet"/>
+			</lookup>
+			<string ref="line01">Information om upphovsrättslagen och om talboken</string>
+			<string ref="line10">Denna bok är framställd för användare av anpassade medier enligt 17§ Upphovsrättslagen. Olaga spridning eller överföring beivras.</string>
+			<string ref="line02">Talboken har <test vref="1" low="1" high="1"> en sida</test>
+				<test vref="1" low="2"><insert vref="1" lref="numbers"/> sidor</test> och rubriker på <test vref="2" low="1" high="1">en nivå</test><test vref="2" low="2"><insert vref="2" lref="numbers"/> nivåer</test>.</string>
+			<string ref="syn01">Boken är inläst för <insert vref="1" lref="publishers"/> år <insert vref="2"/>.</string>
+			<string ref="syn02">Inläst med talsyntes.</string>
+			<string ref="ft01">Boken är inläst för <insert vref="1" lref="publishers"/> år [år].</string>
+			<string ref="ft02">Inläsare är [inläsare] vid [producent].</string>
+			<string ref="line04">Boken är inläst i både en normal version och en långsammare version. Du läser den <test vref="1" low="1" high="1">långsamma</test><test vref="1" low="2" high="2">normala</test> versionen.</string>
+			<string ref="line07">Denna talbok innehåller även elektronisk text som är tillgänglig via läsprogram i dator.</string>
+			<string ref="line08">Slut på informationen.</string>
+
+			<string ref="headingFront">Inledande avsnitt</string>
+			<string ref="headingBody">Avsnitt</string>
+			<string ref="headingRear">Avslutande avsnitt</string>
+
+			<string ref="line09">OBSERVERA</string>
+			<string ref="blank-page">Blank sida</string>
+			<string ref="colophon">Förlagsinformation</string>
+			<string ref="dedication">Dedikation</string>
+			<string ref="toc">Innehåll</string>
+			<string ref="backCoverText">Baksidestext</string>
+			<string ref="rearJacketCopy">Baksidestext</string>
+			<string ref="notes">Noter</string>
+		</language>
+		<language xml:lang="en">
+			<lookup ref="numbers">
+				<item name="1" value="one"/>
+				<item name="2" value="two"/>
+				<item name="3" value="three"/>
+				<item name="4" value="four"/>
+				<item name="5" value="five"/>
+				<item name="6" value="six"/>
+				<item name="7" value="seven"/>
+				<item name="8" value="eight"/>
+				<item name="9" value="nine"/>
+				<item name="10" value="ten"/>
+				<item name="11" value="eleven"/>
+				<item name="12" value="twelve"/>
+			</lookup>
+			<lookup ref="publishers">
+				<item name="TPB" value="The Swedish Library of Talking Books and Braille"/>
+				<item name="MTM" value="Swedish Agency for Accessible Media"/>
+				<item name="SIT" value="The Swedish Institute for Special Needs Education"/>
+			</lookup>
+			<string ref="line01">Information about Swedish Copyright Law and this talking book</string>
+			<string ref="line10">This talking book has been produced for users of adapted media in accordance with §17 of Swedish Copyright Law. Illegal distribution or transmission will be prosecuted.</string>
+			<string ref="line02">The talking book is <test vref="1" low="1" high="1"> one page</test>
+				<test vref="1" low="2"><insert vref="1" lref="numbers"/> pages</test> long and has headings at <test vref="2" low="1" high="1">one level</test><test vref="2" low="2"><insert vref="2" lref="numbers"/> levels</test>.</string>
+				
+				
+			<string ref="syn01">It was produced by <insert vref="1" lref="publishers"/> in <insert vref="2"/>.</string>
+			<string ref="syn02">Narrated using speech synthesis.</string>
+			<string ref="ft01">It was produced by <insert vref="1" lref="publishers"/> in [year].</string>
+			<string ref="ft02">Narrated by [narrator] at [producer].</string>
+			<string ref="line04">This particular talking book is provided in two different versions, one narrated at a normal tempo and another narrated at a slower tempo.  This version is the <test vref="1" low="1" high="1">slower</test><test vref="1" low="2" high="2">normal</test> version.</string>
+			
+			<string ref="line07">The e-text of the book is provided and can be accessed using text-display software.</string>
+			<string ref="line08">End of information.</string>
+
+			<string ref="headingFront">Introductory section</string>
+			<string ref="headingBody">Part</string>
+			<string ref="headingRear">Closing section</string>
+			
+			<string ref="line09">NOTE</string>
+			<string ref="blank-page">Empty page</string>
+			<string ref="colophon">Publisher's Information</string>
+			<string ref="dedication">Dedication</string>
+			<string ref="toc">Contents</string>
+			<string ref="backCoverText">Back cover text</string>
+			<string ref="rearJacketCopy">Rear jacket copy</string>
+			<string ref="notes">Footnotes</string>
+		</language>
+	</body>
+</localization>

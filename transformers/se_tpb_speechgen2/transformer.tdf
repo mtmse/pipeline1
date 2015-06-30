@@ -3,6 +3,8 @@
 	<description>Generates audio for a DTBook document.</description>
 	<classname>se_tpb_speechgen2.SpeechGen2</classname>
 	<jar>lib/com4j.jar</jar>
+	<jar>lib/gbook.jar</jar>
+	<jar>lib/mysql-connector-java-5.0.7-bin.jar</jar>
 	<license>LGPL</license>
 	<author>Martin Blomberg</author>
 	<support>https://lists.sourceforge.net/lists/listinfo/daisymfc-support</support>
@@ -27,8 +29,7 @@
 			<description>file://path/to/file.xml</description>
 			<example>c:/books/file.xml</example>
 		</parameter>
-		
-		
+
 		<parameter required="false" direction="in" type="text/plain">
 			<name>ttsBuilderConfig</name>
 			<description>/path/to/ttsbuilder-configfile.xml</description>
@@ -42,8 +43,7 @@
 			<example>${transformer_dir}/conf/sgConfig.xml</example>
 			<default>${transformer_dir}/conf/sgConfig.xml</default>
 		</parameter>
-		
-		
+
 		<parameter required="false" direction="in" type="enum">
 			<name>concurrentAudioMerge</name>
 			<description>should the merge of audio files happen concurrent, true of false?</description>
@@ -97,8 +97,7 @@
 			</enum>
 			<default>false</default>
 		</parameter>
-		
-				
+
 		<parameter required="false" type="enum">
 			<name>failOnError</name>
 			<description>Whether to abort after a TTS error</description>
@@ -126,7 +125,7 @@
 			<description>Add milliseconds of silence padding at the end of each audio file.
 			This silence is not pointed out by smil.</description>
 			<example>1000</example>
-			<default>1000</default>
+			<default>500</default>
 		</parameter>
 		
 	</parameters>

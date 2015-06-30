@@ -39,5 +39,12 @@
 	<classpathentry kind="lib" path="lib/isorelax.jar"/>
 	<classpathentry kind="lib" path="lib/jing.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="lib/neospeech.jar"/>
+	<classpathentry kind="lib" path="lib/tpb-watermark.jar"/>
+	<classpathentry kind="lib" path="lib/truezip-6.jar"/>
+	<classpathentry kind="lib" path="lib/tpb-playlist.jar"/>
+	<classpathentry kind="lib" path="lib/gbook.jar"/>
+	<classpathentry kind="lib" path="lib/poolman.jar"/>
+	<classpathentry kind="lib" path="lib/tpb-validation.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskScript version="2.0" name="rmfcreator">
+	<nicename>Skippability Tweaker</nicename>
+	<description>Adds skippability to a Daisy 2.02 fileset</description>
+	
+	<parameter name="input" value="" required="true">
+		<nicename>Input ncc.html file</nicename>
+		<description>A ncc.html file</description>
+		<datatype>
+			<file mime="application/x-dtbd202ncc+xml" type="input"/>
+		</datatype>
+	</parameter>
+	
+	<parameter name="output" value="" required="true">
+		<nicename>Output folder</nicename>
+		<description>Output folder</description>
+		<datatype>
+			<directory type="output"/>
+		</datatype>
+	</parameter>
+		
+	<task name="se_tpb_skippabilityTweaker" interactive="false">
+
+		<parameter>
+			<name>input</name>
+			<value>${input}</value>
+		</parameter>		
+		<parameter>
+			<name>output</name>
+			<value>${output}</value>
+		</parameter>
+		<parameter>
+			<name>backupPrefix</name>
+			<value>skip~bkp_</value>
+		</parameter>
+		<parameter>
+			<name>copyNonFilesetFiles</name>
+			<value>true</value>
+		</parameter>
+		
+	</task>
+	
+</taskScript>

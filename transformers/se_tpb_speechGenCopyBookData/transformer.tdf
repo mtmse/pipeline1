@@ -1,0 +1,40 @@
+<transformer version="1.1">
+	<name>se_tpb_speechGenCopyBookData</name>
+	<description>Copies sentences from a given job database for a treated book (in Gbook) to another database, where speechgen2 can query sentences and replace them before they are sent to the tts</description>
+	<classname>se_tpb_speechGenCopyBookData.SpeechGenCopyBookData</classname>
+	<jar>lib/gbook.jar</jar> 
+	<jar>lib/mysql-connector-java-5.0.7-bin.jar</jar>
+	<license>LGPL</license>
+	<author>Janine Wicke</author>
+	<support>https://lists.sourceforge.net/lists/listinfo/daisymfc-support</support>
+	<documentation uri="../../doc/transformers/int_daisy_validator.html"/>
+	
+	<parameters>
+
+		<parameter required="true" direction="in" type="string">
+			<name>jobDbName</name>
+			<description>Name of database for the given job for a treated book where sentences are taken from</description>
+			<example>DTB00001</example>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="string">
+			<name>speechgenDbName</name>
+			<description>Name of database as a source for speechgen (where sentences are copied to) </description>
+			<example>speechgenDb</example>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="string">
+			<name>dbDriver</name>
+			<description>DB driver used for this application</description>
+			<example>com.mysql.jdbc.Driver</example>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="string">
+			<name>dbUrl</name>
+			<description>URL to access the databases (access rights required: read and insert data)</description>
+			<example>jdbc:mysql://127.0.0.1:3306/uttalsverktyg?user=uttalsverktyg&amp;password=uttalsverktyg&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8</example>
+		</parameter>
+				 
+	</parameters>
+
+</transformer>

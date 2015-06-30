@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<taskScript version="2.0" name="bruno-prepare">
+	<nicename>MTM Brunopreparering</nicename>
+	<description>Preparera ett dokument inför en Brunokörning</description>	
+	
+	<parameter name="input" value="" required="true">
+		<nicename>DTBook-fil</nicename>
+		<description>DTBook-filens namn</description>
+		<datatype>
+			<file mime="application/x-dtbook+xml" type="input"/>
+		</datatype>
+	</parameter>
+	
+	<parameter name="output" value="" required="true">
+		<nicename>Mappnamn</nicename>
+		<description>Mappnamn som resultatet ska hamna i</description>
+		<datatype>
+			<directory type="output"/>
+		</datatype>
+	</parameter>
+	
+	<parameter name="identifier" value="" required="true">
+		<nicename>C-nummer</nicename>
+		<description>Det önskade C-numret på Daisy-boken</description>
+		<datatype>
+			<string regex="(C|CA)[0-9]{5}"/>
+		</datatype>
+	</parameter>
+	
+	<parameter name="special" value="false" required="true">
+		<nicename>Specialinläsning</nicename>
+		<description>Anger specialinläsning. Väljer man detta alternativ måste information om talboken och 17§-information läggas in manuellt.</description>
+		<datatype>
+			<boolean/>
+		</datatype>
+	</parameter>
+	
+	<parameter name="trainingType" value="0" required="true">
+		<nicename>Lästräning</nicename>
+		<description>Anger lästräningstyp</description>
+		<datatype>
+			<enum>
+				<item nicename="Ej lästräning" value="0"/>
+				<item nicename="Långsam inläsning" value="1"/>
+				<item nicename="Normal inläsning" value="2"/>
+			</enum>
+		</datatype>
+	</parameter>
+	
+	
+	
+	<!-- *************************
+	      DTBook input validation, plain DTBook validation
+	     ************************* -->
+	<task name="int_daisy_validator" interactive="false">
+		<parameter>
+			<name>input</name>
+			<value>${input}</value>
+		</parameter>
+		<parameter>
+			<name>requireInputType</name>
+			<value>Dtbook document</value>
+		</parameter>		
+		<parameter>
+			<name>delegates</name>
+			<value>org.daisy.util.fileset.validation.delegate.impl.XMLEncodingDelegate,
+			       org.daisy.util.fileset.validation.delegate.impl.CorrectXMLEncodingDeclarationDelegate,
+			       org.daisy.util.fileset.validation.delegate.impl.NoProcessingInstructionDelegate</value>
+		</parameter>
+		<parameter>
+			<name>abortThreshold</name>
+			<value>WARNING</value>
+		</parameter>
+	</task>
+	
+	<!-- *************************
+	      DTBook Fix - run Tidy and Narrator category
+	     ************************* -->
+	<task name="se_tpb_dtbookFix" interactive="false">
+		<parameter>
+			<name>input</name>
+			<value>${input}</value>
+		</parameter>
+
+		<parameter>
+			<name>output</name>
+			<value>${output}/work/dtbookfix/00-dtbookfix.xml</value>
+		</parameter>
+
+		<parameter>
+			<name>runCategories</name>
+			<value>TIDY_NARRATOR</value>
+		</parameter>
+		
+		<parameter>
+			<name>externalizeWhitespace</name>
+			<value>true</value>
+		</parameter>
+		
+		<parameter>
+			<name>simplifyHeadingLayout</name>
+			<value>false</value>
+		</parameter>
+
+		<parameter>
+			<name>forceRun</name>
+			<value>false</value>
+		</parameter>
+			
+	</task>
+	
+	<!-- *************************
+	      Switch ID-number 
+	     ************************* -->
+	<task name="se_tpb_idSwitcher" interactive="false">
+		<parameter>
+			<name>input</name>
+			<value>${output}/work/dtbookfix/00-dtbookfix.xml</value>
+		</parameter>		
+		<parameter>
+			<name>output</name>
+			<value>${output}/work</value>
+		</parameter>						
+		<parameter>
+			<name>identifier</name>
+			<value>${identifier}</value>
+		</parameter>		
+	</task>
+	
+	<!-- *************************
+	      Add DTB info
+	     ************************* -->	
+	<task name="se_tpb_dtbinfo" interactive="false">
+		<parameter>
+			<name>manifest</name>
+			<value>${output}/work/00-dtbookfix.xml</value>
+		</parameter>
+		<parameter>
+			<name>synthetic</name>
+			<value>0</value>
+		</parameter>
+		<parameter>
+			<name>special</name>
+			<value>${special}</value>
+		</parameter>
+		<parameter>
+			<name>bookNumberIfDualSpeed</name>
+			<value>${trainingType}</value>
+		</parameter>
+		<parameter>
+			<name>outDir</name>
+			<value>${output}/work/info/content.xml</value>
+		</parameter>		
+	</task>		
+		
+	<!-- *************************
+	      DTBook input validation 
+	     ************************* -->
+	<task name="int_daisy_validator" interactive="false">
+		<parameter>
+			<name>input</name>
+			<value>${output}/work/info/content.xml</value>
+		</parameter>
+		<parameter>
+			<name>requireInputType</name>
+			<value>Dtbook document</value>
+		</parameter>
+		<parameter>
+			<name>schemas</name>
+			<value>-//TPB//SCH dtbook 2005 Narrator//EN;-//TPB//SCH dtbook 2005 TPB 2008-2 dtb//EN</value>
+		</parameter>
+		<parameter>
+			<name>delegates</name>
+			<value>org.daisy.util.fileset.validation.delegate.impl.XMLEncodingDelegate,
+			       org.daisy.util.fileset.validation.delegate.impl.CorrectXMLEncodingDeclarationDelegate,
+			       org.daisy.util.fileset.validation.delegate.impl.NoProcessingInstructionDelegate</value>
+		</parameter>
+		<parameter>
+			<name>abortThreshold</name>
+			<value>WARNING</value>
+		</parameter>
+	</task>
+	
+	<!-- ******************
+	      Convert to XHTML 
+	     ****************** -->
+	<task name="uk_rnib_dtbook2xhtml" interactive="false">
+		<parameter>
+			<name>xml</name>
+			<value>${output}/work/info/content.xml</value>
+		</parameter>					
+		<parameter>
+			<name>out</name>
+			<value>${output}/work/html/content.html</value>
+		</parameter>						
+		<parameter>
+			<name>copyReferring</name>
+			<value>true</value>
+		</parameter>	
+		<parameter>
+			<name>daisy_noteref</name>
+			<value>true</value>
+		</parameter>
+	</task>
+	
+	<!-- ********************************************
+	      Switch to windows-1252 and dos line breaks 
+	     ******************************************** -->
+	<task name="se_tpb_charsetSwitcher" interactive="false">
+		<parameter>
+			<name>input</name>
+			<value>${output}/work/html/content.html</value>
+		</parameter>					
+		<parameter>
+			<name>output</name>
+			<value>${output}</value>
+		</parameter>
+		<parameter>
+			<name>encoding</name>
+			<value>windows-1252</value>
+		</parameter>
+		<parameter>
+			<name>breaks</name>
+			<value>dos</value>
+		</parameter>
+		
+	</task>
+	
+	<!-- *************************
+	      Delete work directory
+	     ************************* -->
+	<task name="pipeline_system_deleter" interactive="false">
+		<parameter>
+			<name>delete</name>
+			<value>${output}/work/</value>
+		</parameter>
+
+		<parameter>
+			<name>active</name>
+			<value>true</value>
+		</parameter>
+		
+	</task>	
+	
+</taskScript>

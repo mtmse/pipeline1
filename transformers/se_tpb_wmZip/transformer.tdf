@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transformer version="1.1">
+	<name>Zip (with wm/id3) Creator</name>
+	<description>Creates a Zip file.</description>
+	<classname>se_tpb_wmZip.CreateWmZip</classname>
+	<!--jar>truezip-6.jar</jar-->
+	<license>LGPL</license>
+	<author>Linus Ericson</author>
+	<support>https://lists.sourceforge.net/lists/listinfo/daisymfc-support</support>
+			
+	<parameters>
+
+		<parameter required="true" direction="in" type="application/x-filesystemDirectory">
+			<name>input</name>
+			<description>The input directory</description>
+			<example>file:///path/to/dir/</example>
+		</parameter>
+
+		<parameter required="true" direction="out" type="application/x-filesystemDirectory">
+			<name>output</name>			
+			<description>The output directory</description>
+			<example>D:/path/to/outputDir/</example>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="string">
+			<name>prefix</name>
+			<description>Result file name prefix</description>
+			<example>book</example>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="string">
+			<name>watermark</name>			
+			<description>The watermark to add</description>
+			<example>4b5db9aa691eb94b</example>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="enum">
+			<name>addID3</name>
+			<description>Should ID3 tags be added?</description>
+			<example>true</example>
+			<enum>
+				<value>true</value>
+				<value>false</value>
+			</enum>
+		</parameter>		
+		
+		<parameter required="true" direction="in" type="enum">
+			<name>addPlaylist</name>
+			<description>Should a playlist be added?</description>
+			<example>true</example>
+			<enum>
+				<value>true</value>
+				<value>false</value>
+			</enum>
+		</parameter>		
+		
+	</parameters>
+
+</transformer>
+

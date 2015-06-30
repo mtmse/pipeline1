@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project default="all">
+	
+	<property name="pipeline.dir" value="${basedir}"/>
+	<property name="dist" value="${basedir}/dist"/>
+	<property name="temp.dir" value="${basedir}/build/ant"/>
+	<property name="transformers.dir" value="${basedir}/transformers"/>
+
+	<!-- Timestamp format definition -->
+	<tstamp>
+		<format property="ISO-TODAY" pattern="yyyy-MM-dd"/>
+	</tstamp>	
+	<property name="release.name" value="pipeline-${ISO-TODAY}"/>
+
+	<!-- ================================================================== -->
+	<!-- Fileset definitions                                                -->
+	<!-- ================================================================== -->
+	
+	<!-- Daisy Pipeline Framework -->
+	<fileset dir="${basedir}/bin" id="fileset.framework">
+		<patternset refid="patternset.framework"/>
+		<exclude name="**/*.java"/>
+		<exclude name="*.jar"/> 
+	</fileset>
+	
+	<!-- Transformers -->
+	<fileset dir="${transformers.dir}" id="fileset.transformers">
+		<patternset refid="patternset.transformers"/>
+		<exclude name="**/*.java"/>
+		<exclude name="*.jar"/> 
+	</fileset>
+	
+	<!-- Libs -->
+	<fileset dir="${basedir}/lib" id="fileset.lib">
+		<patternset refid="patternset.lib"/>
+	</fileset>
+		
+	
+	<!-- ================================================================== -->
+	<!-- Patternset definitions                                             -->
+	<!-- ================================================================== -->
+	
+	<!-- The set of transformers to be included -->
+	<patternset id="patternset.transformers">
+		<include name="**/*.*"/>
+	</patternset>
+
+	<!-- The set of framework files to be included -->
+	<patternset id="patternset.framework">
+		<include name="**/*.*"/>
+	</patternset>
+	
+	<!-- The set libs to be included -->
+	<patternset id="patternset.lib">
+		<include name="**/*.jar"/>
+	</patternset>
+	
+	
+	<!-- ================================================================== -->
+	<!-- Private Targets                                                    -->
+	<!-- ================================================================== -->
+	
+	<!-- - - - - - - - - - - - - - - - - -
+		target: createDistributionDir
+		      
+		Creates the distribution dirctory.
+		- - - - - - - - - - - - - - - - - -->
+	<target name="createDistributionDir">
+		<delete dir ="${dist}"/>
+		<mkdir dir="${dist}"/>
+	</target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: depends                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="depends">
+    	<subant target="buildReleaseZip">
+    		<property name="distribution.dir" value="${dist}"/>
+			<property name="release.name" value="${release.name}"/>
+    		<fileset dir="${pipeline.dir}">
+    			<include name="build-core.xml"/>
+    		</fileset>
+    	</subant>
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: compile                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="compile">
+    	<!-- Since tpb_pipeline_addon is merged with pipeline in Git, this is redundant -->
+    	<tempfile property="temp.dir" />
+    	<mkdir dir="${temp.dir}"/>
+    	<copy todir="${temp.dir}">
+    		<fileset dir="${pipeline.dir}">
+    			<include name="**/*.*"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${temp.dir}" overwrite="true">
+    		<fileset dir="${basedir}">
+    			<include name="src/**/*.*"/>
+    			<include name="transformers/**/*.*"/>
+    			<include name="lib/**/*.*"/>
+	    		<include name="build-core.xml"/>
+    		</fileset>
+    	</copy>
+    		
+    	<subant target="buildReleaseZip">
+    		<property name="distribution.dir" value="${dist}"/>
+			<property name="release.name" value="${release.name}"/>
+    		<fileset dir="${temp.dir}">
+    			<include name="build-core.xml"/>
+    		</fileset>
+    	</subant>
+    	<!-- remove the temporary directory -->
+    	<delete dir="${temp.dir}"/>
+    </target>
+
+	
+	
+	<!-- ================================================================== -->
+	<!-- Public Targets                                                     -->
+	<!-- ================================================================== -->
+	
+	<!-- ================================= 
+          target: buildSciptZip              
+         ================================= -->
+    <target name="buildSciptZip" depends="createDistributionDir" description="Creates a Zip file containing the PipeOnline script files">
+        <zip destfile="${dist}/pipeonline-scripts-${ISO-TODAY}.zip">
+        	<zipfileset dir="scripts_pipeonline" excludes="autoprod/*.*" includes="*.*"/>
+        </zip>
+    </target>
+
+	
+	<!-- ================================= 
+          target: all              
+         ================================= -->
+    <target name="all" depends="createDistributionDir, compile, buildSciptZip" description="--> description">
+    </target>
+	
+	<!-- ================================= 
+          target: buildBokfixAddon              
+         ================================= -->
+    <target name="buildBokfixAddon" depends="createDistributionDir, depends" description="Builds the Boxfix addons">
+    	<!-- unzip the pipeline to a temporary directory -->
+    	<tempfile property="temp.dir" />
+    	<mkdir dir="${temp.dir}"/>
+    	<unzip src="${dist}/${release.name}.zip" dest="${temp.dir}"/>
+    	
+    	<!-- Copy tweaker.bat and script file -->
+    	<mkdir dir="${temp.dir}/${release.name}/scripts/bokfix"/>
+    	<copy file="scripts_bokfix/SkippabilityTweaker.taskScript" todir="${temp.dir}/${release.name}/scripts/bokfix"/>
+    	<copy file="scripts_bokfix/tweaker.bat" todir="${temp.dir}/${release.name}"/>
+    	
+    	<!-- zip the temporary directory -->
+    	<zip destfile="${dist}/${release.name}-bokfix.zip" update="false">
+    		<fileset dir="${temp.dir}"/>
+    	</zip>
+    	
+    	<!-- remove the temporary directory -->
+    	<delete dir="${temp.dir}"/>
+    </target>
+
+
+</project>

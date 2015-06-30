@@ -1,0 +1,44 @@
+<transformer version="1.0">
+	<name>PDTB Facade Replacer</name>
+	<description>Replaces the facade of an encrypted book</description>
+	<classname>se_tpb_facadeReplacer.FacadeReplacer</classname>
+	<license>LGPL</license>
+	<author>Linus Ericson</author>
+	<support>https://lists.sourceforge.net/lists/listinfo/daisymfc-support</support>
+	
+	<parameters>	
+	    <parameter required="true" direction="in" type="application/x-filesystemDirectory">
+			<name>encrypted</name>
+			<description>Folder containing one or several encrypted filesets</description>
+			<example>D:/path/to/inputdir/</example>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="application/x-filesystemDirectory">
+			<name>facade</name>
+			<description>Folder containing one or several facades</description>
+			<example>D:/path/to/inputdir/</example>
+		</parameter>
+		
+		<parameter required="true" direction="out" type="application/x-filesystemDirectory">
+			<name>output</name>
+			<description>The output directory</description>
+			<example>D:/path/to/outputdir/</example>
+		</parameter>
+		
+		<parameter required="false" type="string">
+			<name>noticeText</name>
+			<description>The protected DTB notice text</description>			
+			<example>This book uses IPP protection</example>
+			<default>Detta meterial är copyrightskyddat och försett med IPP-skydd.</default>
+		</parameter>
+		
+		<parameter required="false" type="string">
+			<name>noticeAudio</name>
+			<description>The protected DTB notice audio</description>			
+			<example>notice.wav</example>
+			<default>notice.wav</default>
+		</parameter>
+
+	</parameters>
+
+</transformer>

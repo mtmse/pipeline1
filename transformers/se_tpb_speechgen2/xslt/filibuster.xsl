@@ -2,9 +2,9 @@
 	<xsl:output method="text" omit-xml-declaration="yes" standalone="no" indent="no"/>
 	
 	<xsl:template match="text()">
-		<xsl:text> </xsl:text>
+		<xsl:text></xsl:text>
 		<xsl:value-of select="replace(replace(current(), '&amp;', '&amp;amp;'), '&lt;', '&amp;lt;')"/>
-		<xsl:text> </xsl:text>
+		<xsl:text></xsl:text>
 	</xsl:template>	
 
 		
@@ -13,7 +13,7 @@
 	</xsl:template>	
 	
 	
-	<xsl:template match="pagenum[@page='front' and matches(string(.),'[MmDdCcLlVvIi]*')]">
+	<xsl:template match="pagenum[@page='front']">
 		<xsl:choose>
 			<xsl:when test="lang('sv')">
 				<xsl:text>Romersk siffra, sidan </xsl:text>
@@ -63,6 +63,18 @@
 				<xsl:text>. </xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<!-- exponenter -->
+	<xsl:template match="sup">
+		<xsl:text> upphöjt till </xsl:text>
+		<xsl:apply-templates />
+	</xsl:template>
+
+	<!-- subscript -->
+	<xsl:template match="sub">
+		<xsl:text> index </xsl:text>
+		<xsl:apply-templates />
 	</xsl:template>
 
 

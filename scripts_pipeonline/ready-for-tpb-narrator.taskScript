@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<taskScript version="2.0" name="ready-for-narrator">
+	<nicename>Redo för MTM Narrator</nicename>
+	<description>Kontrollerar om en DTBook-fil är redo för MTM Narrator</description>
+	
+	<parameter name="input" value="" required="true">
+		<nicename>DTBook-fil</nicename>
+		<description>DTBook-filens namn</description>
+		<datatype>
+			<file mime="application/x-dtbook+xml" type="input"/>
+		</datatype>
+	</parameter>
+
+	<parameter name="output" value="work" required="false">
+		<nicename>Mappnamn</nicename>
+		<description>Mappnamn för den temporära utdatan</description>
+		<datatype>
+			<directory type="output"/>
+		</datatype>
+	</parameter>
+	
+	<!-- *************************
+	      DTBook input validation, plain DTBook validation
+	     ************************* -->
+	<task name="int_daisy_validator" interactive="false">
+		<parameter>
+			<name>input</name>
+			<value>${input}</value>
+		</parameter>
+		<parameter>
+			<name>requireInputType</name>
+			<value>Dtbook document</value>
+		</parameter>		
+		<parameter>
+			<name>delegates</name>
+			<value>org.daisy.util.fileset.validation.delegate.impl.XMLEncodingDelegate,
+			       org.daisy.util.fileset.validation.delegate.impl.CorrectXMLEncodingDeclarationDelegate,
+			       org.daisy.util.fileset.validation.delegate.impl.NoProcessingInstructionDelegate</value>
+		</parameter>
+		<parameter>
+			<name>abortThreshold</name>
+			<value>WARNING</value>
+		</parameter>
+	</task>
+	
+	<!-- *************************
+	      DTBook Fix - run Tidy and Narrator category
+	     ************************* -->
+	<task name="se_tpb_dtbookFix" interactive="false">
+		<parameter>
+			<name>input</name>
+			<value>${input}</value>
+		</parameter>
+
+		<parameter>
+			<name>output</name>
+			<value>${output}/work/dtbookfix/00-dtbookfix.xml</value>
+		</parameter>
+
+		<parameter>
+			<name>runCategories</name>
+			<value>TIDY_NARRATOR</value>
+		</parameter>
+		
+		<parameter>
+			<name>externalizeWhitespace</name>
+			<value>true</value>
+		</parameter>
+		
+		<parameter>
+			<name>simplifyHeadingLayout</name>
+			<value>false</value>
+		</parameter>
+
+		<parameter>
+			<name>forceRun</name>
+			<value>false</value>
+		</parameter>
+			
+	</task>
+	
+	
+	<!-- *************************
+	      Switch ID-number 
+	     ************************* -->
+	<task name="se_tpb_idSwitcher" interactive="false">
+		<parameter>
+			<name>input</name>
+			<value>${output}/work/dtbookfix/00-dtbookfix.xml</value>
+		</parameter>		
+		<parameter>
+			<name>output</name>
+			<value>${output}/work</value>
+		</parameter>						
+		<parameter>
+			<name>identifier</name>
+			<value>C00000</value>
+		</parameter>		
+	</task>
+	
+	<!-- *************************
+	      Add DTB info
+	     ************************* -->	
+	<task name="se_tpb_dtbinfo" interactive="false">
+		<parameter>
+			<name>manifest</name>
+			<value>${output}/work/00-dtbookfix.xml</value>
+		</parameter>
+		<parameter>
+			<name>synthetic</name>
+			<value>1</value>
+		</parameter>
+		<parameter>
+			<name>outDir</name>
+			<value>${output}/work/dtbinfo/01-dtbinfo.xml</value>
+		</parameter>		
+	</task>	
+	
+	<!-- *************************
+	      DTBook input validation 
+	     ************************* -->
+	<task name="int_daisy_validator" interactive="false">
+		<parameter>
+			<name>input</name>
+			<value>${output}/work/dtbinfo/01-dtbinfo.xml</value>
+		</parameter>
+		<parameter>
+			<name>requireInputType</name>
+			<value>Dtbook document</value>
+		</parameter>
+		<parameter>
+			<name>schemas</name>
+			<value>-//TPB//SCH dtbook 2005 Narrator//EN;-//TPB//SCH dtbook 2005 TPB 2008-2 dtb//EN</value>
+		</parameter>
+		<parameter>
+			<name>delegates</name>
+			<value>org.daisy.util.fileset.validation.delegate.impl.XMLEncodingDelegate,
+			       org.daisy.util.fileset.validation.delegate.impl.CorrectXMLEncodingDeclarationDelegate,
+			       org.daisy.util.fileset.validation.delegate.impl.NoProcessingInstructionDelegate</value>
+		</parameter>
+		<parameter>
+			<name>abortThreshold</name>
+			<value>WARNING</value>
+		</parameter>
+	</task>
+	
+</taskScript>

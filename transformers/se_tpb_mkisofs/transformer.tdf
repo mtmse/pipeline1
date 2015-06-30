@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transformer version="1.1">
+	<name>ISO Creator</name>
+	<description>Creates an ISO image.</description>
+	<classname>se_tpb_mkisofs.CreateISO</classname>
+	<license>LGPL</license>
+	<author>Linus Ericson</author>
+	<support>https://lists.sourceforge.net/lists/listinfo/daisymfc-support</support>
+			
+	<parameters>
+
+		<parameter required="true" direction="in" type="application/x-filesystemDirectory">
+			<name>input</name>
+			<description>The input directory</description>
+			<example>file:///path/to/dir/</example>
+		</parameter>
+
+		<parameter required="true" direction="out" type="application/x-filesystemDirectory">
+			<name>output</name>			
+			<description>The output directory</description>
+			<example>D:/path/to/outputDir/</example>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="enum">
+			<name>subdirs</name>
+			<description>Create an image file for each subdir</description>
+			<example>true</example>
+			<enum>
+				<value>true</value>
+				<value>false</value>
+			</enum>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="enum">
+			<name>manifestDirs</name>
+			<description>Create an image file for each subdir containing a manifest</description>
+			<example>true</example>
+			<enum>
+				<value>true</value>
+				<value>false</value>
+			</enum>
+		</parameter>
+		
+		<parameter type="string" required="false">
+			<name>volId</name>
+			<description>Volume descriptor</description>
+			<example>A book</example>
+			<default></default>
+		</parameter>
+		
+		<parameter type="string" required="false">
+			<name>preparer</name>
+			<description>Preparer</description>
+			<example>Daisy Pipeline</example>
+			<default>Daisy Pipeline</default>
+		</parameter>
+		
+		<parameter type="enum" required="false">
+			<name>skipThis</name>
+			<description>Skip this step</description>
+			<example>false</example>
+			<enum>
+				<value>true</value>
+				<value>false</value>
+			</enum>
+			<default>false</default>
+		</parameter>
+		
+	</parameters>
+
+</transformer>

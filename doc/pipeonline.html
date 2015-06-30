@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type"
+  content="application/xhtml+xml; charset=UTF-8" />
+  <title>PipeOnline</title>
+  <link href="document.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<h1>PipeOnline och Narrator</h1>
+
+<h2>Innehåll</h2>
+<ul>
+  <li><a href="#basics">Basics</a></li>
+  <li><a href="#mysql">MySQL</a></li>
+  <li><a href="#testdokument">Testdokument</a></li>
+  <li><a href="#deploy">Driftsättning</a> 
+    <ul>
+      <li><a href="#pipeline">Pipeline</a></li>
+      <li><a href="#daemon">PipeOnline Daemon</a></li>
+      <li><a href="#web">PipeOnline Web</a></li>
+      <li><a href="#scripts">PipeOnline Scripts</a></li>
+    </ul>
+  </li>
+  <li><a href="#fel">Felsökning</a> 
+    <ul>
+      <li><a href="#jobbsomkraschar">Jobb som kraschar</a></li>
+      <li><a href="#jobbsomfastnar">Jobb som fastnar</a></li>
+      <li><a href="#pipeonlineharsomnat">PipeOnline har "somnat"</a></li>
+      <li><a href="#epost">E-post till it-overvakning@mtm.se</a></li>
+      <li><a href="#valfail">Valideringsfel för färdig Daisy 3</a> 
+        <ul>
+          <li><a href="#jpg">Not a valid JPEG file</a></li>
+          <li><a href="#audio">Audio duration</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#neospeech">NeoSpeech</a></li>
+  <li><a href="#filibusterslavar">Filibusterslavar</a></li>
+</ul>
+
+<h2><span id="basics">Basics</span></h2>
+<ul>
+  <li>PipeOnline körs på servern <span
+    style="font-family: Courier New,Courier,monospace">193.11.19.24</span>,
+    och nås via webben på adressen <span
+    style="font-family: Courier New,Courier,monospace">http://193.11.19.24:8080/pipeonline-web/.</span></li>
+  <li>Tomcat körs som användaren <span
+    style="font-family: Courier New,Courier,monospace">tpbadmin</span>.</li>
+  <li>Tomcat finns installerat under katalogen <span
+    style="font-family: Courier New,Courier,monospace">/opt/apache-tomcat-6.0.14</span>.</li>
+  <li>PipeOnline körs som användaren <span
+    style="font-family: Courier New,Courier,monospace">tpbadmin</span>.</li>
+  <li>Pipeline körs som användaren <span
+    style="font-family: Courier New,Courier,monospace">tpbadmin</span>.</li>
+  <li>PipeOnline finns installerat under katalogen <span
+    style="font-family: Courier New,Courier,monospace">/opt/pipeonline</span>.</li>
+  <li>Tomcat startas om med <span
+    style="font-family: Courier New,Courier,monospace">cron</span> (som
+    användaren <span
+    style="font-family: Courier New,Courier,monospace">tpbadmin</span>) varje
+    morgon när klockan står på 05:30. Detta görs för att kompensera för
+    att Toplink Essentials inte släpper inaktiva databaskopplingar, vilket
+    gör att webbapplikationen kraschar. Klockan på maskinen går knappt 90
+    minuter efter vanlig svensk vintertid.</li>
+</ul>
+
+<h3>Start av Tomcat</h3>
+<p>MySQL måste startas innan man startar Tomcat, annars kommer inte PipeOnline att
+kunna ansluta till databasen.</p>
+<pre>
+> su - tpbadmin
+> export JRE_HOME=/opt/jre1.5.0_06
+> /opt/apache-tomcat-6.0.14/bin/startup.sh
+</pre>
+
+<h2><span id="mysql">MySQL</span></h2>
+
+<p>PipeOnline lagrar sina data dels i databas, dels på disk. MySQL 5.0.51
+används som databas och den processen körs av <span
+style="font-family: Courier New,Courier,monospace">mysql5</span>. Det är bra
+att kunna anluta till databasen för att utföra eventuell städning. Jag har
+använt MySQL Query Browser version 1.2.12 och gjort en remote-anslutning
+från min maskin till databasen för PipeOnline.</p>
+<ul>
+  <li>Adress: 193.11.19.24:3306</li>
+  <li>Inloggningsuppgifter: pipeonline:pipeonline</li>
+  <li>Databas: pipeonline</li>
+</ul>
+
+<h3>Start av MySQL</h3>
+<p>
+MySQL finns installerat i mappen <code>/opt/mysql/mysql-5.0.51a-linux-i686/</code>
+och körs alltså av användaren <code>mysql5</code> och startas så här: 
+</p>
+
+<pre>
+> su
+> su - mysql5
+> cd /opt/mysql/mysql-5.0.51a-linux-i686/
+> ./bin/safe_mysqld &
+> exit
+> exit
+</pre>
+
+<h2><span id="testdokument">Testdokument</span></h2>
+
+<p>Jag har gjort ett antal testdokument som jag använt för att trigga
+buggar som jag hittat. Det mest använda testdokumentet är <span
+style="font-family: Courier New,Courier,monospace">smoke_test.zip<span
+style="font-family: Arial,Helvetica,sans-serif">, som jag använder för att
+testa varje ny version av Pipeline vid driftsättning. </span></span></p>
+
+<h2><span id="deploy">Driftsättning</span></h2>
+
+<p>För att göra en komplett driftsättning av PipeOnline behövs åtkomst
+både med FTP och ssh.</p>
+
+<p>En fullt fungerande installation av PipeOnline består av tre system som
+samverkar. Dessa system är Daisy Pipeline, PipeOnline Daemon och PipeOnline
+Web. Dessutom behövs taskScript-filer för att jobb ska kunna köras i
+Pipeline. Dessa skript installeras separat.</p>
+
+<p>För att hindra användare att lägga till nya jobb via webbgränssnittet
+finns en parameter i PipeOnlines databas, tabell <span
+style="font-family: Courier New,Courier,monospace">meta</span>. Raden med
+namn <span
+style="font-family: Courier New,Courier,monospace">pipeonline.job.create</span>
+kan anta värdena <span
+style="font-family: Courier New,Courier,monospace">true</span> eller <span
+style="font-family: Courier New,Courier,monospace">false</span>, och avgör
+ifall nya jobb kan skapas eller inte. Exempelvis kan det kännas praktiskt
+att inga nya jobb läggs till medan en uppdatering görs ifall den som gör
+uppdateringen planerar att testköra ett dokument innan övriga användare
+ges möjlighet. Jag har gjort så när jag uppdaterat, sedan snabbt tillåtit
+nya jobb, använt webbgränssnittet för att lägga till ett testjobb, och
+sedan förbjudit nya jobb igen. Glöm inte att ändra tillbaka inställningen
+så att nya jobb tillåts om du tillfälligt förbjudit nya jobb!</p>
+
+<h3><span id="pipeline">Pipeline</span></h3>
+
+<p>I PipeOnline används en patchad version av Daisy Pipeline, det är
+alltså en version som har ytterligare funktionalitet i form av transformers.
+För att bygga en zip som innehåller en patchad Pipeline i Eclipse och
+driftsätta den för PipeOnline, följ dessa steg: </p>
+<ol>
+  <li>Checka ut Daisy Pipeline från sourceforge<span
+    style="font-family: Courier New,Courier,monospace"></span>.</li>
+  <li>Checka ut projektet <span
+    style="font-family: Courier New,Courier,monospace">tpb_pipeline_addon</span>
+    från lokala cvs:en</li>
+  <li>Kör <span
+    style="font-family: Courier New,Courier,monospace">tpb_pipeline_addon/build.xml
+    all</span> med ant. En zip med namn på formen <span
+    style="font-family: Courier New,Courier,monospace">pipeline-yyyy-mm-dd.zip</span>
+    skapas i mappen <span
+    style="font-family: Courier New,Courier,monospace">dist</span>. </li>
+  <li>Placera den skapade zip-filen där du vill installera Daisy Pipeline
+    för din installation av PipeOnline. På TPB ska zipfilen läggas i
+    mappen <span
+    style="font-family: Courier New,Courier,monospace">/opt/pipeonline/pipeline</span>.</li>
+  <li>Kör unzip på filen.</li>
+  <li>Ta bort befintlig symlänk med namn <span
+    style="font-family: Courier New,Courier,monospace">/opt/pipeonline/pipeline/current</span>.</li>
+  <li>Skapa en symlänk med namn <span
+    style="font-family: Courier New,Courier,monospace">/opt/pipeonline/pipeline/current</span>
+    som pekar på den just uppackade katalogen för Pipeline.</li>
+</ol>
+
+<h3><span id="daemon">PipeOnline Daemon</span></h3>
+
+<p>Demonen används för att starta Pipeline med jobb från kön.
+Installationen av PipeOnline Daemon består av att packa upp en tgz-fil. För
+att bygga tgz-filen som innehåller PipeOnline Daemon i Eclipse och
+driftsätta den för PipeOnline, följ dessa steg:</p>
+<ol>
+  <li>Checka ut projekten <span
+    style="font-family: Courier New,Courier,monospace">pipeonline-common</span>
+    och <span
+    style="font-family: Courier New,Courier,monospace">pipeonline-pipeline</span>
+    från den lokala cvs:en.</li>
+  <li>Kör <span
+    style="font-family: Courier New,Courier,monospace">pipeonline-pipeline/build.xml
+    buildReleaseTarGz</span> med ant. En tgz-fil med namn på formen <span
+    style="font-family: Courier New,Courier,monospace">pipeonline-pipeline-yyyy-mm-dd.tgz</span>
+    skapas i mappen <span
+    style="font-family: Courier New,Courier,monospace">dist</span>.</li>
+  <li>Placera den skapade filen där du vill installera PipeOnline Daemon
+    för din installation av PipeOnline. På TPB ska tgz-filen läggas i
+    mappen <span
+    style="font-family: Courier New,Courier,monospace">/opt/pipeonline/daemon/yyyymmdd-hhmm</span>.
+    där dagens datum och klockslag ersätter yyyy osv.</li>
+  <li>Kör <span style="font-family: Courier New,Courier,monospace">tar xvfz
+    &lt;fil&gt;</span> på filen.</li>
+  <li>Om en demon redan kör: sätt databasens metaväde för <span
+    style="font-family: Courier New,Courier,monospace">pipeonline.daemon.quitWhenPossible</span>
+    till <span style="font-family: Courier New,Courier,monospace">true</span>
+    för att demonen ska stanna vid första lämpliga tillfälle. </li>
+  <li>När ingen demon längre kör: sätt databasens metaväde för <span
+    style="font-family: Courier New,Courier,monospace">pipeonline.daemon.quitWhenPossible</span>
+    till <span
+    style="font-family: Courier New,Courier,monospace">false</span>.</li>
+  <li>Ställ dig i den mapp där den nya demonen finns, starta demonen med
+    kommandot <span
+    style="font-family: Courier New,Courier,monospace">./pipeonline-daemon.sh
+    &amp;</span></li>
+</ol>
+
+<p>En lock-fil finns för att hindra demonen att köra i flera instanser
+samtidigt. Filen heter <span
+style="font-family: Courier New,Courier,monospace">/opt/pipeonline/daemon/daemon.lock</span>.
+Om du är säker på att ingen demon kör men ändå har problem att starta
+en ny demon på grund av att den filen redan finns måste du radera den
+manuellt. Lock-filen kontrolleras och skapas normalt av <span
+style="font-family: Courier New,Courier,monospace">pipeonline-daemon.sh</span>
+vid start av demonen, och raderas precis innan <span
+style="font-family: Courier New,Courier,monospace">pipeonline-deamon.sh</span>
+avslutas.</p>
+
+<h3><span id="web">PipeOnline Web</span></h3>
+
+<p>PipeOnline Web är användargränssnittet för PipeOnline. PipeOnline Web
+driftsätts som en war-fil. Driftsättningen behöver inte ta hänsyn till
+ifall PipeOnline Daemon eller Pipeline körs för tillfället. För att packa
+PipeOnline Web till en war-fil i Eclipse och drifsätta den för PipeOnline,
+följ dessa steg:</p>
+<ol>
+  <li>Checka ut projekteten <span
+    style="font-family: Courier New,Courier,monospace">pipeonline-common</span>
+    och <span
+    style="font-family: Courier New,Courier,monospace">pipeonline-web</span>
+    från den lokala cvs:en.</li>
+  <li>Kör <span
+    style="font-family: Courier New,Courier,monospace">pipeonline-web/build.xml
+    all</span> med ant, en fil med namnet <span
+    style="font-family: Courier New,Courier,monospace">pipeonline-web.war</span>
+    skapas i mappen dist.</li>
+  <li>Öppna en webbläsare och gå till adressen <span
+    style="font-family: Courier New,Courier,monospace">http://193.11.19.24:8080/manager/html</span>,
+    inloggningsuppgifter finns i IT-avdelningens upprättade lista.</li>
+  <li>Leta upp pipeonline-web, välj Undeploy.</li>
+  <li>Gå till avsnittet Deploy, formuläret "WAR file to deploy".</li>
+  <li>Välj den war-fil som du just byggt med Eclipse, och klicka på knappen
+    Deploy.</li>
+  <li>Testa de ändringar du gjort i webbapplikationen.</li>
+  <li>Om allt gått bra kopierar man sedan den aktuella war-filen från din
+    dator till servern med ftp. Gör en mapp som heter <span
+    style="font-family: Courier New,Courier,monospace">/opt/pipeonline/web/yyyy-mm-dd</span>.
+    Lägg filen <span
+    style="font-family: Courier New,Courier,monospace">p</span><span
+    style="font-family: Courier New,Courier,monospace">ipeonline-web.war</span>
+    i den skapade mappen.</li>
+  <li>Om driftsättningen misslyckades på något sätt finns möjligheten
+    att backa genom att med ftp ladda hem den tidigare war-filen från <span
+    style="font-family: Courier New,Courier,monospace">/opt/pipeonline/web/</span>
+    och driftsätta den igen.</li>
+</ol>
+
+<h3><span id="scripts">PipeOnline Scripts</span></h3>
+<ol>
+  <li>Checka ut projektet <span
+    style="font-family: Courier New,Courier,monospace">tpb_pipeline_addon</span>
+    från den lokala cvs:en.</li>
+  <li>Kör <span
+    style="font-family: Courier New,Courier,monospace">tpb_pipeonline_addon/build.xml
+    buildScriptZip</span> med ant.</li>
+  <li>En zip-fil med namn på formen <span
+    style="font-family: Courier New,Courier,monospace">pipeonline-scripts-yyyy-mm-dd.zip</span>
+    skapas i mappen <span
+    style="font-family: Courier New,Courier,monospace">tpb_pipeline_addon/dist</span>.</li>
+  <li>Ladda upp filen till servern med ftp till mappen <span
+    style="font-family: Courier New,Courier,monospace">/opt/pipeonline/scripts</span>.</li>
+  <li>Kör unzip på filen.</li>
+  <li>Ta bort befintlig symlänk med namn <span
+    style="font-family: Courier New,Courier,monospace">/opt/pipeonline/scripts/current</span>.</li>
+  <li>Skapa en ny symlänk med namn <span
+    style="font-family: Courier New,Courier,monospace">/opt/pipeonline/scripts/current</span>
+    som pekar på den just uppackade katalogen för skript.</li>
+</ol>
+
+<h2><span id="fel">Felsökning</span></h2>
+
+<p>Ibland händer det att jobb i PipeOnline inte fortlöper som man önskar.
+Det är i huvudsak två typer av fel som inträffar bortsett från jobb som
+fastnar i någon validator: jobb som kraschar och jobb som fastnar.</p>
+
+<h3><span id="jobbsomkraschar">Jobb som kraschar</span></h3>
+
+<p>De flesta krascher inträffar i transformern <span
+style="font-family: Courier New,Courier,monospace">se_tpb_speechgen2</span>.
+Där finns integration med system för talsyntes, och det är oftast just
+integrationen med dessa system eller dessa system själva som är orsaken
+till ett kraschat jobb. En vanlig orsak till att integrationen med Filibuster
+kraschar är att en <em>time out</em> inträffar, dvs filibusterprocessen
+slutar att svara. Då har det tagit mer än 20 minuter sedan en textsnutt
+skickades till en av filibusterprocesserna och inget ljud har ännu
+returnerats. Orsaken till att en sådan process slutar att svara är ofta
+minnesbrist på den server där processen exekverar, orsakat av gamla
+filibusterprocesser som inte används men ändå ligger kvar och tar minne.
+Att sådana processer ligger kvar kan vara resultatet av att någon tidigare
+bok kraschat eller avbrutits på felaktigt sätt. Filibuster kan också sluta
+svara beroende på att någon textsnutt triggar en bugg i filibuster som gör
+att processen stannar. </p>
+
+<p>Också integrationen med NeoSpeech kan orsaka att jobb kraschar, detta är
+dock mycket ovanligt. Då det inträffar rapporteras det på SpeechGen2-sidan
+"socket timeout" eller liknande, och i loggarna för NeoSpeech finns ett
+"socket error". Jag har inte kunnat ringa in orsaken till detta,
+supportavdelningen för NeoSpeech trodde att det berodde på "unstable
+network".</p>
+
+<p>När ett jobb kraschar brukar jag felsöka enligt följande steg:</p>
+<ol>
+  <li>I vilken transformer inträffar kraschen?</li>
+  <li>Vilka meddelanden har skrivits ut?</li>
+  <li>Vad står det i stdout-loggen?</li>
+  <li>Vad står det i stderr-loggen?</li>
+</ol>
+
+<p>I stderr-loggen, som är omfattande, kan man följa precis hur boken
+skickas mening för mening till de olika neospeech- och filibusterslavarna,
+vilken slav som läser vilken mening och hur lång tid det tog. På varje rad
+i loggen ser man vilken tråd utskriften kommer ifrån, och högst upp i
+loggen kan man för svenska böcker se med vilket kommando (<span
+style="font-family: Courier New,Courier,monospace">ssh folke@&lt;ip&gt;
+&lt;kommando&gt; &lt;flagga&gt;</span>) som varje tråd startar sin process.
+</p>
+
+<h3><span id="jobbsomfastnar">Jobb som fastnar</span></h3>
+
+<p>Orsaken till att jobb fastnat har i huvudsak varit två: </p>
+
+<p>1) Jobbet kan inte skapas ordentligt av någon anledning, exempelvis en
+zip-fil som innehåller en katalogstruktur med namn som innehåller åäö
+eller andra konstiga tecken. Det problemet har jag försökt lösa genom att
+leta efter sådana filnamn då zippen packas upp och klaga ifall det hittas.
+Den kollen görs med regex i <span
+style="font-family: Courier New,Courier,monospace">org.daisy.pipeonline.presentation.script.ScriptFileUtils</span>
+i projektet pipeonline-web.</p>
+
+<p>2) Jobbet kan inte avbrytas ordentligt. Vanligtvis är det även här
+integration med Filibuster som är orsaken. Felet finns förmodligen inte i
+själva PipeOnline utan har sin grund i hur <span
+style="font-family: Courier New,Courier,monospace">se_tpb_speechgen2</span>
+fungerar då ett jobb avbryts.</p>
+
+<p>Jobb som fastnar i PipeOnline, exempelvis med status "CREATING", brukar
+jag manuellt sätta till status "FAILED" i databasen för att kunna ta bort
+dom via webben. Med en remote-anslutning med MySQL Query Browser är det
+lätt att göra den typen av saker. </p>
+
+<p>I sällsynta fall får man också slå ihjäl den Daisy Pipeline process
+som kör jobbet på servern. </p>
+
+<h3><span id="pipeonlineharsomnat">PipeOnline har "somnat"</span></h3>
+
+<p>Att många böcker ligger på kö men inga böcker behandlas kan bero på att PipeOnline Daemon inte kör.
+Omstart av denna sker med hjälp av scriptet 
+<span style="font-family: Courier New,Courier,monospace">pipeonline-daemon.sh</span>.
+Gå till katalogen <span style="font-family: Courier New,Courier,monospace">/opt/pipeonline/daemon/current</span>
+och starta om demonen med följande kommando:
+<span style="font-family: Courier New,Courier,monospace">./pipeonline-daemon.sh&amp;</span>
+
+
+
+</p>
+
+<h3><span id="epost">E-post till it-overvakning@mtm.se</span></h3>
+
+<p>Då PipeOnline ser att ett allvarligt fel inträffat eller kan vara på
+väg att inträffa skickas e-post till adressen <span
+style="font-family: Courier New,Courier,monospace">it-overvakning@mtm.se</span> med
+länk till det aktuella jobbet.
+</p>
+
+<p>En orsak till att PipeOnline tror att något allvarligt fel är väg att
+inträffa för ett Pipelinejobb är ifall Pipeline inte hört av sig på en
+viss tid: 360000 millisekunder. När något sådant inträffar skickas ett
+mail, vilket leder till att en utvecklare får undersöka jobbet. Observera
+att det inte behöver inträffa ett allvarligt fel för att detta händer, en
+orsak till att Pipeline inte hör av sig kan vara att Pipeline är inbegripen
+i hårt arbete. </p>
+
+<h3><span id="valfail">Valideringsfel vid färdig Daisy 3</span></h3>
+
+<h4><span id="jpg">Not a valid JPEG file</span></h4>
+
+<p>ZedVal kan klaga på att boken innehåller en bild som inte är valid
+JPEG. Det finns två typer av bilder med filnamn som slutar på .jpg, en av
+dessa innehåller EXIF-data + bilden, den andra typen bara bilden. ZedVal
+tillåter bara själva bilden. En work around för detta som går att göra
+maskinellt är att använda transformern <span
+style="font-family: Courier New,Courier,monospace">se_tpb_imageConverter</span>
+och konvertera alla jpg till png och sedan tillbaka till jpg. Detta skulle
+kunna göras tidigt i kedjan, men jag har gjort det manuellt på min dator
+för en handfull böcker.</p>
+
+<h4><span id="audio">Audio duration</span></h4>
+
+<p>Det kan hända att ZedVal klagar på att smilfiler refererar till en
+tidpunkt som inte finns i en ljudfil, när detta händer är ljudfilen oftast
+några millisekunder kortare än vad smilfilen anger. För att lösa detta
+problem finns en transformerparameter i <span
+style="font-family: Courier New,Courier,monospace">se_tpb_speechgen2</span>
+där man kan ange hur många millisekunder tystnad som ska adderas till
+slutet av varje ljudfil. Inträffar detta fel så är denna tystnad inte
+tillräckligt lång.</p>
+<!--
+<h4>Missing smilref</h4>
+
+<p>Transformern <span
+style="font-family: Courier New,Courier,monospace">int_daisy_mixedContentNormalizer</span>
+har visat sig producera böcker utan smilref på vissa nödvändiga ställen.
+Det har förekommit för elementen <span
+style="font-family: Courier New,Courier,monospace">pagenum</span> och <span
+style="font-family: Courier New,Courier,monospace">noteref</span> i dtbook.
+<span
+style="font-family: Courier New,Courier,monospace">se_tpb_syncPointNormalizer</span>
+kan användas istället, då blir resultatet korrekt.</p>
+-->
+
+<h2><span id="neospeech">NeoSpeech</span></h2>
+
+<p>Installerad på "tpbserver", 193.11.19.24.</p>
+<dl>
+  <dt>Var finns filerna?</dt>
+    <dd><span
+      style="font-family: Courier New,Courier,monospace">/usr/vt</span></dd>
+  <dt>Var hamnar loggarna?</dt>
+    <dd><span
+      style="font-family: Courier New,Courier,monospace">/usr/vt/log</span></dd>
+  <dt>Vilket program används?</dt>
+    <dd><span
+      style="font-family: Courier New,Courier,monospace">/usr/vt/ttssrv/ttssrv</span></dd>
+  <dt>Vilken användare kör NeoSpeech?</dt>
+    <dd><span
+    style="font-family: Courier New,Courier,monospace">root</span></dd>
+  <dt>Hur startas NeoSpeech?</dt>
+    <dd>Startas då operativsystemet startas, se <span
+      style="font-family: Courier New,Courier,monospace">/etc/rc.local</span></dd>
+  <dt>Hur stoppas NeoSpeech?</dt>
+    <dd>Stannar då servern stängs av.</dd>
+  <dt>Hur installerades det?</dt>
+    <dd>Jag följde VoiceText-Server-Quick-Installation-Guide-Linux.pdf.</dd>
+  <dt>Vart vänder man sig för support?</dt>
+    <dd>På neospeech.com finns en avdelning för supportärenden. Där kan
+      man ställa sin fråga via ett webbformulär.</dd>
+</dl>
+
+<p>I den medföljande mappen <span
+style="font-family: Courier New,Courier,monospace">neospeech</span> finns
+dokumentation som täcker bland annat installation och aktivering av licens,
+samt den licensverifieringskod som använts på TPB. I filen <span
+style="font-family: Courier New,Courier,monospace">message.html</span> i den
+mappen finns dessutom en mailkonversation mellan Richard Stones (TPB) och
+personal på Voice Text där bland annat "CD-key" finns.</p>
+
+<h2><span id="filibusterslavar">Filibusterslavar</span></h2>
+
+<p>Talsyntesen folke/filibuster körs på dedikerade slavar (linux). För att
+Daisy Pipeline ska kunna komma åt dessa slavar smidigt utan att logga in
+interaktivt används nyckelpar (dsa) som består av en publik och en privat
+nyckel. På varje folkemaskin finns den publika nyckeln i filen <span
+style="font-family: Courier New,Courier,monospace">~.ssh/authorized_keys2</span>.</p>
+
+<p>Varje slav accessas med en och samma privata nyckel (något oortodoxt, men
+nåja) som ligger hos Daisy Pipeline-klienten. I dagsläget heter den <span
+style="font-family: Courier New,Courier,monospace">/opt/pipeonline/pipeline/.ssh/folke_dsa</span>.
+När en ny filibusterslav ansluts, eller när ägare till den privata nyckeln
+ändras är det lämpligt att först manuellt använda nyckeln för att ssh:a
+in till alla filibusterslavar, vid det första tillfället får man nämligen
+en fråga angående anslutningen som måste besvaras interaktivt.</p>
+
+<p>På varje ny installation av slavmaskin måste man vara noga med
+rättigheterna så att katalogen och filen (<span
+style="font-family: Courier New,Courier,monospace">~.ssh/authorized_keys2</span>)
+bara får skrivas av ägaren. Detta är nödvändigt för att den ska
+accepteras av systemet som publik nyckel. </p>
+</body>
+</html>

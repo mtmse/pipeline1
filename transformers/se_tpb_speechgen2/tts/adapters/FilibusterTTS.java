@@ -30,6 +30,8 @@ import org.daisy.util.file.StreamRedirector;
 
 import se_tpb_speechgen2.tts.TTSConstants;
 import se_tpb_speechgen2.tts.TTSException;
+import se_tpb_speechgen2.tts.adapters.sentRepl.SentenceReplacer;
+import se_tpb_speechgen2.tts.adapters.sentRepl.SentenceReplacerException;
 import se_tpb_speechgen2.tts.util.TTSUtils;
 
 /**
@@ -41,6 +43,9 @@ import se_tpb_speechgen2.tts.util.TTSUtils;
  * used when distributing the tts system.
  * 
  * @author Martin Blomberg
+ * 
+ * @author Janine Wicke
+ * adapted to replace sentences 
  *
  */
 public class FilibusterTTS extends AbstractTTSAdapter {
@@ -66,6 +71,18 @@ public class FilibusterTTS extends AbstractTTSAdapter {
 	private static SimpleDateFormat formatter = 	// date format used when printing messages to log file
 		new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	
+	
+	//JW 2011-04-08
+	public static String PARAM_SPEECHGEN_DB_NAME = "speechgenDbName";
+	public static String PARAM_DB_DRIVER = "dbDriver";
+	public static String PARAM_DB_URL = "dbUrl";
+	public static String PARAM_USE_ANALYSER_UTIL = "useAnalyserUtil";
+	
+	
+	SentenceReplacer sentenceReplacer = null;
+	
+	
+	
 	/**
 	 * Constructs a new instance given the parameters in <code>params</code>
 	 * and the util functions <code>tu</code>. 
@@ -86,6 +103,8 @@ public class FilibusterTTS extends AbstractTTSAdapter {
 		if (params != null) {
 			mParams = params;
 			
+			System.out.println("parameters " + mParams.toString());
+			
 			if (null != mParams.get(TTSConstants.TIMEOUT)) {
 				String s = mParams.get(TTSConstants.TIMEOUT);
 				mTimeout = Long.parseLong(s);
@@ -105,6 +124,30 @@ public class FilibusterTTS extends AbstractTTSAdapter {
 			mStreamRedirector = new StreamRedirector(mProcess.getErrorStream(), System.err, true);
 			mStreamRedirector.start();
 			
+			//JW 2011-04-08
+			String message = "";
+			
+			String useAnalyserUtilString = mParams.get(PARAM_USE_ANALYSER_UTIL);
+			
+			System.out.println(PARAM_USE_ANALYSER_UTIL + "  " + useAnalyserUtilString);
+			
+			if (useAnalyserUtilString != null && useAnalyserUtilString.equals("true")) {
+				String speechgenDbName = mParams.get(PARAM_SPEECHGEN_DB_NAME);
+				if (speechgenDbName == null || speechgenDbName.length()<1) message += "parameter " + PARAM_SPEECHGEN_DB_NAME + " is not set.\n";
+				String dbUrl = mParams.get(PARAM_DB_URL);
+				if (dbUrl == null || dbUrl.length()<1) message += "parameter " + PARAM_DB_URL + " is not set.\n";
+				String dbDriver = mParams.get(PARAM_DB_DRIVER);
+				if (dbDriver == null || dbDriver.length()<1) message += "parameter " + PARAM_DB_DRIVER + " is not set.\n";
+				
+				//if any parameter is not set, throw exception
+				if (message.length()>0) throw new IllegalArgumentException("missing parameters! : " + message);
+				
+				try {
+					sentenceReplacer = new SentenceReplacer(dbUrl, dbDriver, speechgenDbName);
+				} catch (SentenceReplacerException e) {
+					throw new IllegalArgumentException(e.getMessage(), e); //FIXME throw another exception here? 
+				}
+			} //end if (useAnalyserUtilString.equals("true")) 
 		} else {
 			String msg = "No parameters supplied! Unable to continue";
 			throw new IllegalArgumentException(msg);
@@ -116,14 +159,14 @@ public class FilibusterTTS extends AbstractTTSAdapter {
 	 */
 	public void close() throws IOException, TTSException {
 		
-		if (null != mWriter) {
-			DEBUG("Writes Java property 'line.separator' to exit Filibuster...");
-			mWriter.write(System.getProperty("line.separator"));
-			mWriter.flush();
-			DEBUG("Done!");
-			
+		if (mWriter != null) {
+			DEBUG("Close open output stream to TTS sub system...");			
 			mWriter.close();
 			mWriter = null;
+		}
+
+		if (mInput != null) {
+			DEBUG("Close open input stream from TTS sub system...");			
 			mInput.close();
 			mInput = null;
 		}
@@ -185,10 +228,31 @@ public class FilibusterTTS extends AbstractTTSAdapter {
 	
 	/**
 	 * Sends one line of text to the (remote) TTS using the piped reader/input stream.
-	 * @param line the text to be sent to the TTS.
+	 * @param text the text to be sent to the TTS.
 	 * @throws IOException
 	 */
-	private void send(String line) throws IOException {		
+	private void send(String text) throws IOException {		
+		
+		
+		//JW 2011-04-08
+		String line = text;
+		String newtext = null;
+		if (sentenceReplacer != null) { //if analyser tool is plugged in
+			try {
+				newtext = sentenceReplacer.replaceSentence(line);
+				
+			} catch (SentenceReplacerException e) {
+				DEBUG("error in sentence replacer: " + e.getLocalizedMessage());
+				throw new IOException(e.getMessage()); //FIXME throw something else here?!
+			}
+			if (newtext != null) {
+				line = newtext;
+				DEBUG("sentence replaced! old: " + text + "\n replacement "
+						+ line);
+			} else {
+				DEBUG("sentence is null! " + "for text: " + text);
+			}
+		}
 		mLastText = line;
 		DEBUG("Writes the line >>" + mLastText + "<<");
 		mWriter.write(line);
@@ -274,11 +338,11 @@ public class FilibusterTTS extends AbstractTTSAdapter {
 		if (null == line) {
 			return false;
 		}
-		
+
 		if (line.trim().length() == 0) {
 			return false;
 		}
-		
+
 		return true;
 	}
 	

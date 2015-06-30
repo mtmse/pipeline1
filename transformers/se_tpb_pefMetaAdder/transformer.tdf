@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transformer version="1.0">
+	<name>Meta Adder</name>
+	<description>Adds meta data</description>
+	<classname>org.daisy.pipeline.transformers.XSLTRunner</classname>
+	<license>LGPL</license>
+	<author>Joel Håkansson</author>
+	<support>https://lists.sourceforge.net/lists/listinfo/daisymfc-support</support>
+	
+	<parameters>
+
+		<parameter required="true" direction="in" type="application/xml">
+			<name>xml</name>
+			<description>The input PEF file</description>
+			<example>file:///path/to/file.xml</example>
+		</parameter>
+		
+		<parameter type="application/xml">
+			<name>xslt</name>			
+			<value>${transformer_dir}/tpb-meta-finalizer.xsl</value>
+		</parameter>		
+		
+		<parameter type="string">
+			<name>factory</name>			
+			<value>net.sf.saxon.TransformerFactoryImpl</value>
+		</parameter>
+		
+		<parameter required="true" direction="out" type="application/xml">
+			<name>out</name>
+			<description>The output PEF file</description>
+			<example>file:///path/to/outFile.tex</example>
+		</parameter>		
+				
+	</parameters>	
+
+</transformer>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transformer version="1.1">
+	<name>TPB Watermark</name>
+	<description>Adds a watermarking to the book</description>
+	<classname>se_tpb_watermark.Watermark</classname>
+	<license>Proprietary TPB</license>
+	<author>Linus Ericson</author>
+	<support>TPB</support>
+	
+	<parameters>
+
+		<parameter required="true" direction="in" type="application/x-dtbd202ncc+xml">
+			<name>input</name>
+			<description>The input manifest</description>
+			<example>D:/path/to/inputFile.xml</example>
+		</parameter>
+		
+		<parameter required="true" direction="out" type="application/x-filesystemDirectory">
+			<name>output</name>			
+			<description>The output directory</description>
+			<example>D:/path/to/outputDir/</example>
+		</parameter>	
+		
+		<parameter required="true" direction="in" type="string">
+			<name>watermark</name>			
+			<description>The watermark to add</description>
+			<example>4b5db9aa691eb94b</example>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="enum">
+			<name>addID3</name>
+			<description>Should ID3 tags be added?</description>
+			<example>true</example>
+			<enum>
+				<value>true</value>
+				<value>false</value>
+			</enum>
+		</parameter>		
+		
+		<parameter required="true" direction="in" type="enum">
+			<name>addPlaylist</name>
+			<description>Should a playlist be added?</description>
+			<example>true</example>
+			<enum>
+				<value>true</value>
+				<value>false</value>
+			</enum>
+		</parameter>
+						
+	</parameters>	
+
+</transformer>
+

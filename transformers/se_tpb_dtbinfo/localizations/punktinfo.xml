@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE localization SYSTEM "localization.dtd"> -->
+<localization version="2007-1">
+	<head>
+		<meta name="loc:target" content="../punktinfo.xsl"/>
+		<meta name="dc:Date" content="2009-12-16"/>
+		<meta name="dc:Creator" content="Joel Håkansson"/>
+	</head>
+	<body>
+		<language xml:lang="sv">
+			<lookup ref="numbers">
+				<item name="2" value="två"/>
+				<item name="3" value="tre"/>
+				<item name="4" value="fyra"/>
+				<item name="5" value="fem"/>
+				<item name="6" value="sex"/>
+				<item name="7" value="sju"/>
+				<item name="8" value="åtta"/>
+				<item name="9" value="nio"/>
+				<item name="10" value="tio"/>
+				<item name="11" value="elva"/>
+				<item name="12" value="tolv"/>
+			</lookup>
+			<lookup ref="publishers">
+				<item name="TPB" value="TPB, Johanneshov"/>
+				<item name="MTM" value="MTM, Johanneshov"/>
+				<item name="SIT" value="Specialpedagogiska institutet"/>
+			</lookup>
+			<string ref="line01">Punktskriftsboken är producerad <insert vref="2"/> av <insert vref="1" lref="publishers"/></string>
+			<string ref="line02">Medienummer: <insert vref="1"/></string>
+			<string ref="blank-page">Tom sida</string>
+		</language>
+		<language xml:lang="en">
+			<lookup ref="numbers">
+				<item name="1" value="one"/>
+				<item name="2" value="two"/>
+				<item name="3" value="three"/>
+				<item name="4" value="four"/>
+				<item name="5" value="five"/>
+				<item name="6" value="six"/>
+				<item name="7" value="seven"/>
+				<item name="8" value="eight"/>
+				<item name="9" value="nine"/>
+				<item name="10" value="ten"/>
+				<item name="11" value="eleven"/>
+				<item name="12" value="twelve"/>
+			</lookup>
+			<lookup ref="publishers">
+				<item name="TPB" value="TPB, Johanneshov"/>
+				<item name="MTM" value="MTM, Johanneshov"/>
+				<item name="SIT" value="The Swedish Institute for Special Needs Education"/>
+			</lookup>
+			<string ref="line01">Punktskriftsboken är producerad <insert vref="2"/> av <insert vref="1" lref="publishers"/></string>
+			<string ref="line02">Medienummer: <insert vref="1"/></string>
+			<string ref="blank-page">Empty page</string>
+		</language>
+	</body>
+</localization>

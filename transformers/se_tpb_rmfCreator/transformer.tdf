@@ -1,0 +1,35 @@
+<transformer version="1.0">
+	<name>RMF Creator</name>
+	<description>Transforms an ncc.html to a RMF file</description>
+	<classname>se_tpb_rmfCreator.RMFCreator</classname>
+	<license>LGPL</license>
+	<author>Linus Ericson</author>
+	<support>https://lists.sourceforge.net/lists/listinfo/daisymfc-support</support>
+	
+	<parameters>
+
+		<parameter required="true" direction="in" type="application/x-dtbd202ncc+xml">
+			<name>input</name>
+			<description>The ncc.html file (or directory)</description>
+			<example>file:///path/to/ncc.html</example>
+		</parameter>
+		
+		<parameter type="application/xml">
+			<name>xslt</name>			
+			<value>${transformer_dir}/ncc2rmf.xsl</value>
+		</parameter>		
+		
+		<parameter type="string">
+			<name>factory</name>			
+			<value>net.sf.saxon.TransformerFactoryImpl</value>
+		</parameter>
+		
+		<parameter required="true" direction="out" type="application/x-filesystemDirectory">
+			<name>out</name>
+			<description>The output folder</description>
+			<example>file:///path/to/outDir</example>
+		</parameter>
+		
+	</parameters>
+		
+</transformer>

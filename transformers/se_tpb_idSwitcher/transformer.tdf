@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transformer version="1.1">
+	<name>ID Switcher</name>
+	<description>Switches the ID (dtb:uid, dc:identifier etc) in a fileset</description>
+	<classname>se_tpb_idSwitcher.IdSwitcher</classname>
+	<license>LGPL</license>
+	<author>Linus Ericson</author>
+	<support>https://lists.sourceforge.net/lists/listinfo/daisymfc-support</support>
+	
+	<parameters>
+
+		<parameter required="true" direction="in" type="application/anonymous">
+			<name>input</name>
+			<description>The input manifest</description>
+			<example>D:/path/to/inputFile.xml</example>
+		</parameter>
+		
+		<parameter required="true" direction="out" type="application/x-filesystemDirectory">
+			<name>output</name>			
+			<description>The output directory</description>
+			<example>D:/path/to/outputDir/</example>
+		</parameter>	
+		
+		<parameter required="true" direction="in" type="string">
+			<name>identifier</name>			
+			<description>The desired identifier</description>
+			<example>C12345</example>
+		</parameter>
+		
+		<parameter required="false" direction="in" type="string">
+			<name>regex</name>
+			<description>A regular expression describing the allowed format of the identifier</description>
+			<example>C[0-9]+</example>
+			<default>.+</default>
+		</parameter>	
+						
+	</parameters>	
+
+</transformer>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transformer version="1.1">
+	<name>Send Book</name>
+	<description>Sends the whole dtbook file to Filibuster</description>
+	<classname>se_tpb_sendBook.SendBook</classname>
+	<license>LGPL</license>
+	<author>Janine Wicke</author>
+	<support>https://lists.sourceforge.net/lists/listinfo/daisymfc-support</support>
+	
+	<parameters>
+
+		<parameter required="true" direction="in" type="application/x-dtbook+xml">
+			<name>input</name>
+			<description>The input manifest</description>
+			<example>D:/path/to/inputFile.xml</example>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="string">
+			<name>command</name>			
+			<description>The command to send file</description>
+			<example></example>
+		</parameter>
+		
+		<parameter required="true" direction="in" type="string">
+			<name>timeout</name>			
+			<description>Time interval after which the transmission is timed out</description>
+			<example></example>
+		</parameter>
+						
+	</parameters>	
+
+</transformer>
