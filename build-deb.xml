@@ -38,6 +38,7 @@
       <!-- Required JARs -->
       <data src="${base.dir}/lib" type="directory">
 	<mapper type="perm" prefix="${deb.install.lib}/lib"/>
+	<include name="client-1.0.5.jar"/>
 	<include name="batik-css.jar"/>
 	<include name="batik-util.jar"/>
 	<include name="chardet.jar"/>
