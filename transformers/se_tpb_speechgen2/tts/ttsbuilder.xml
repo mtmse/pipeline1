@@ -118,7 +118,26 @@
 				<param name="characterSubstitutionTables" value="${transformer_dir}/charsubst/character-translation-table.xml,${transformer_dir}/charsubst/character-translation-table_sv.xml"/>
 			</tts>
 		</lang>
-		
+
+		<!--
+		<lang lang="sv">
+			<tts>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+
+				<param name="class" value="se_tpb_speechgen2.tts.adapters.SpeechServerTTS"/>
+
+				<param name="host" value="pipeutv1.mtm.se"/>
+				<param name="port" value="9090"/>
+				<param name="maxRetries" value="10"/>
+			</tts>
+		</lang>
+		-->
+
 		<lang lang="no">
 			<tts>
 				<param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost tclsh /home/folke/FilibusterBrage/nob_narraFil2.tcl --quote=yes"/>
