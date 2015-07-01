@@ -14,7 +14,7 @@
 	
 	<fileset dir="${base.dir}/lib" id="fileset.addin.jars">
 		<patternset id="patternset.utilJars.2">
-			<include name="client-1.0.5.jar"/>
+			<include name="client-1.0.5-all.jar"/>
 			<include name="batik-css.jar"/>
 			<include name="batik-util.jar"/>
 			<include name="commons-cli-1.1.jar"/>
