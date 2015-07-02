@@ -17,12 +17,12 @@ public class SpeechServerTTS extends AbstractTTSAdapter {
     public SpeechServerTTS(TTSUtils ttsUtils, Map<String, String> params) {
         super(ttsUtils, params);
 
-        String host = System.getProperty("speech.server.host", "speech.server.host not set in pipeline.user.properties")
+        String host = System.getProperty("speech.server.host", "speech.server.host not set in pipeline.user.properties");
 
-        String stringPort = System.getProperty("speech.server.port", "9090")
+        String stringPort = System.getProperty("speech.server.port", "9090");
         int port = Integer.parseInt(stringPort);
 
-        String stringRetries = System.getProperty("speech.server.max.retries", "3")
+        String stringRetries = System.getProperty("speech.server.max.retries", "3");
         maxRetries = Integer.parseInt(stringRetries);
 
         client = new SpeechClient(host, port);
