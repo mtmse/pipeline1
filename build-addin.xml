@@ -18,7 +18,7 @@
 	
 	<fileset dir="${base.dir}/lib" id="fileset.pipeline.jars">
 		<patternset id="patternset.utilJars.2">
-			<include name="client-1.0.5-all.jar"/>
+			<include name="client-1.0.6-all.jar"/>
 			<include name="batik-css.jar"/>
 			<include name="batik-util.jar"/>
 			<include name="chardet.jar"/>

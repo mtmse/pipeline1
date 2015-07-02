@@ -8,7 +8,7 @@ Bundle-NativeCode:  transformers/se_tpb_speechgen2/lib/com4j.dll; osname=win32; 
 Bundle-ClassPath: 
  daisy-pipeline.jar,
  daisy-util.jar,
- lib/client-1.0.5-all.jar,
+ lib/client-1.0.6-all.jar,
  lib/batik-css.jar,
  lib/batik-util.jar,
  lib/brailleUtils-core.jar,
