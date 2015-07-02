@@ -5,8 +5,12 @@ group = "${mavenGroupId}"
 ant.importBuild 'build.xml'
 
 buildscript {
- repositories {maven { url 'http://repo.jfrog.org/artifactory/libs-release/' }}
- dependencies {classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '3.0.1')}
+    repositories {
+        maven { url 'http://repo.jfrog.org/artifactory/libs-release/' }
+    }
+    dependencies {
+        classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '3.0.1')
+    }
 }
 
 apply plugin: 'java'
@@ -14,88 +18,89 @@ apply plugin: 'maven-publish'
 apply plugin: "com.jfrog.artifactory"
 
 configurations.all {
-	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 sourceSets {
-	main {
-		java {
-			srcDir 'src'
-			srcDir 'transformers'
-		}
-		resources {
-			srcDir 'src'
-			srcDir 'transformers'
-		}
-	}
+    main {
+        java {
+            srcDir 'src'
+            srcDir 'transformers'
+        }
+        resources {
+            srcDir 'src'
+            srcDir 'transformers'
+        }
+    }
 
-	test {
-		java {
-			srcDir 'test'
-			srcDir 'transformers'
-		}
-		resources {
-			srcDir 'test'
-			srcDir 'transformers'
-		}
-	}
+    test {
+        java {
+            srcDir 'test'
+            srcDir 'transformers'
+        }
+        resources {
+            srcDir 'test'
+            srcDir 'transformers'
+        }
+    }
 }
 
 dependencies {
-	compile files(
-			"lib/client-1.0.5-all.jar",
-			"lib/batik-css.jar",
-			"lib/batik-util.jar",
-			"lib/brailleUtils-catalog.jar",
-			"lib/brailleUtils-core.jar",
-			"lib/chardet.jar",
-			"lib/commons-cli-1.1.jar",
-			"lib/commons-pool-1.4.jar",
-			"lib/dotify-translator.jar",
-			"lib/dotify.jar",
-			"lib/epubcheck-3.0.jar",
-			"lib/gbook.jar",
-			"lib/icu4j-3_8.jar",
-			"lib/isorelax.jar",
-			"lib/jing.jar",
-			"lib/jl1.0.jar",
-			"lib/junit-4.7.jar",
-			"lib/log4j-1.2.15.jar",
-			"lib/louisFat.jar",
-			"lib/neospeech.jar",
-			"lib/poolman.jar",
-			"lib/postgresql-9.3-1102-jdbc3.jar",
-			"lib/sac.jar",
-			"lib/saxon.jar",
-			"lib/saxon8-dom.jar",
-			"lib/saxon8.jar",
-			"lib/se.tpb.encryption.pdtbv1.jar",
-			"lib/serializer.jar",
-			"lib/slf4j-api-1.5.6.jar",
-			"lib/slf4j-log4j12-1.5.6.jar",
-			"lib/stax-api-1.0.1.jar",
-			"lib/tagsoup-1.2.jar",
-			"lib/texhyphj.jar",
-			"lib/tpb-playlist.jar",
-			"lib/tpb-validation.jar",
-			"lib/tpb-watermark.jar",
-			"lib/tritonus_remaining-0.3.6.jar",
-			"lib/tritonus_share-0.3.6.jar",
-			"lib/truezip-6.jar",
-			"lib/wstx-lgpl-3.2.8.jar",
-			"lib/xalan.jar",
-			"lib/xercesImpl.jar",
-			"lib/xml-apis.jar",
-			"lib/zedval.jar",
-			"transformers/int_daisy_filesetAudioTagger/lib/jaudiotagger.jar",
-			"transformers/se_tpb_speechgen2/lib/com4j.jar",
-			"transformers/int_vspiewak_odt2daisy/lib/JODL.jar",
-			"transformers/int_vspiewak_odt2daisy/lib/odt2daisy.jar"
-	)
+    compile files(
+            "lib/client-1.0.5-all.jar",
+            "lib/batik-css.jar",
+            "lib/batik-util.jar",
+            "lib/brailleUtils-catalog.jar",
+            "lib/brailleUtils-core.jar",
+            "lib/chardet.jar",
+            "lib/commons-cli-1.1.jar",
+            "lib/commons-pool-1.4.jar",
+            "lib/dotify-translator.jar",
+            "lib/dotify.jar",
+            "lib/epubcheck-3.0.jar",
+            "lib/gbook.jar",
+            "lib/icu4j-3_8.jar",
+            "lib/isorelax.jar",
+            "lib/jing.jar",
+            "lib/jl1.0.jar",
+            "lib/junit-4.7.jar",
+            "lib/log4j-1.2.15.jar",
+            "lib/louisFat.jar",
+            "lib/neospeech.jar",
+            "lib/poolman.jar",
+            "lib/postgresql-9.3-1102-jdbc3.jar",
+            "lib/sac.jar",
+            "lib/saxon.jar",
+            "lib/saxon8-dom.jar",
+            "lib/saxon8.jar",
+            "lib/se.tpb.encryption.pdtbv1.jar",
+            "lib/serializer.jar",
+            "lib/slf4j-api-1.5.6.jar",
+            "lib/slf4j-log4j12-1.5.6.jar",
+            "lib/stax-api-1.0.1.jar",
+            "lib/tagsoup-1.2.jar",
+            "lib/texhyphj.jar",
+            "lib/tpb-playlist.jar",
+            "lib/tpb-validation.jar",
+            "lib/tpb-watermark.jar",
+            "lib/tritonus_remaining-0.3.6.jar",
+            "lib/tritonus_share-0.3.6.jar",
+            "lib/truezip-6.jar",
+            "lib/wstx-lgpl-3.2.8.jar",
+            "lib/xalan.jar",
+            "lib/xercesImpl.jar",
+            "lib/xml-apis.jar",
+            "lib/zedval.jar",
+            "transformers/int_daisy_filesetAudioTagger/lib/jaudiotagger.jar",
+            "transformers/se_tpb_speechgen2/lib/com4j.jar",
+            "transformers/int_vspiewak_odt2daisy/lib/JODL.jar",
+            "transformers/int_vspiewak_odt2daisy/lib/odt2daisy.jar"
+    )
 }
 
 artifactory {
-    contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
+    contextUrl = "${artifactory_contextUrl}"
+    //The base Artifactory URL if not overridden by the publisher/resolver
     publish {
         repository {
             repoKey = "${artifactory_upload_repo}"
@@ -116,59 +121,59 @@ def date = new Date()
 
 // Definition of publishing 
 publishing {
-	
-	publications {
-		mavenUtil(MavenPublication) {		
-			// POM Metadata
-			groupId    "${mavenGroupId}"
-			artifactId 'org.daisy.util'
-			version "${version}"
-			
-			// Publish the file
-			artifact 'dist/org.daisy.util.jar'
-		}
-		mavenCore(MavenPublication) {		
-			// POM Metadata
-			groupId    "${mavenGroupId}"
-			artifactId 'pipeline-core'
-			version "${version}"
-			
-			// Publish the file
-			artifact 'dist/pipeline.jar'
-		}
-		
-		
-		mavenZip(MavenPublication) {		
-			// POM Metadata
-			groupId    "${mavenGroupId}"
-			artifactId 'pipeline-zip'
-			version "${version}"
 
-			// Publish the file
-			artifact 'dist/pipeline-'+date.format('yyyy-MM-dd')+'.zip'
-		}
-		
-		mavenScripts(MavenPublication) {		
-			// POM Metadata
-			groupId    "${mavenGroupId}"
-			artifactId 'pipelinetaskscripts'
-			version "${version}"
-			
-			// Publish the file
-			artifact 'dist/pipeonline-scripts-'+date.format('yyyy-MM-dd')+'.zip'
-		}
-	}
+    publications {
+        mavenUtil(MavenPublication) {
+            // POM Metadata
+            groupId "${mavenGroupId}"
+            artifactId 'org.daisy.util'
+            version "${version}"
+
+            // Publish the file
+            artifact 'dist/org.daisy.util.jar'
+        }
+        mavenCore(MavenPublication) {
+            // POM Metadata
+            groupId "${mavenGroupId}"
+            artifactId 'pipeline-core'
+            version "${version}"
+
+            // Publish the file
+            artifact 'dist/pipeline.jar'
+        }
+
+
+        mavenZip(MavenPublication) {
+            // POM Metadata
+            groupId "${mavenGroupId}"
+            artifactId 'pipeline-zip'
+            version "${version}"
+
+            // Publish the file
+            artifact 'dist/pipeline-' + date.format('yyyy-MM-dd') + '.zip'
+        }
+
+        mavenScripts(MavenPublication) {
+            // POM Metadata
+            groupId "${mavenGroupId}"
+            artifactId 'pipelinetaskscripts'
+            version "${version}"
+
+            // Publish the file
+            artifact 'dist/pipeonline-scripts-' + date.format('yyyy-MM-dd') + '.zip'
+        }
+    }
 }
 
-artifactoryPublish{
-		publications(publishing.publications.mavenUtil)
-		publications(publishing.publications.mavenCore)
-		publications(publishing.publications.mavenZip)
-		publications(publishing.publications.mavenScripts)
+artifactoryPublish {
+    publications(publishing.publications.mavenUtil)
+    publications(publishing.publications.mavenCore)
+    publications(publishing.publications.mavenZip)
+    publications(publishing.publications.mavenScripts)
 }
 
 artifactoryPublish.dependsOn all
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.3'
+    gradleVersion = '2.3'
 }
