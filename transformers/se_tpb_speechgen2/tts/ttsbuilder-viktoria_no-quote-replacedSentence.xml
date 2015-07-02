@@ -76,42 +76,14 @@
 		
 		<lang lang="sv">
 			<tts>
+                <!--  for speech transscription tool: only 6 threads for speechgen! -->
 			    <param name="command" value="ssh folke@localhost /home/folke/bettan/narraFil2.tcl --quote=no"/>
                 <param name="command" value="ssh folke@localhost /home/folke/bettan/narraFil2.tcl --quote=no"/>
                 <param name="command" value="ssh folke@localhost /home/folke/bettan/narraFil2.tcl --quote=no"/>
                 <param name="command" value="ssh folke@localhost /home/folke/bettan/narraFil2.tcl --quote=no"/>
                 <param name="command" value="ssh folke@localhost /home/folke/bettan/narraFil2.tcl --quote=no"/>
                 <param name="command" value="ssh folke@localhost /home/folke/bettan/narraFil2.tcl --quote=no"/>
-                <!--  for speech transscription tool: only 6 threads for speechgen! -->
-                
-               <!-- <param name="command" value="ssh folke@localhost /home/folke/bettan/narraFil2.tcl - -quote=no"/> --> 
-			
-				<!--param name="command" value="ssh folke@192.168.0.51 tclsh current/narraFil2.tcl"/-->
-				<!-- 
-				<param name="command" value="ssh folke@192.168.0.51 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.51 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.51 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.51 tclsh current/narraFil2.tcl - -quote=yes"/>
-				 -->
-				 
-				<!--param name="command" value="ssh folke@192.168.0.52 tclsh current/narraFil2.tcl"/-->
-				<!-- 
-				<param name="command" value="ssh folke@192.168.0.52 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.52 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.52 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.52 tclsh current/narraFil2.tcl - -quote=yes"/>
-				 -->
-				
-				<!--param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl"/-->
-				<!-- 
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-			     -->
+
 				<param name="class" value="se_tpb_speechgen2.tts.adapters.FilibusterTTS"/>
 				
 				<param name="timeout" value="1200000"/>				
@@ -123,12 +95,25 @@
 				<param name="speechgenDbName" value="speechgenDb"/>		
 				<param name="dbDriver" value="com.mysql.jdbc.Driver"/>		
 				<param name="dbUrl" value="jdbc:mysql://127.0.0.1:3306/uttalsverktyg?user=uttalsverktyg&amp;password=uttalsverktyg&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8"/>		
-				
-				
-				
 			</tts>
 		</lang>
-		
+
+		<!--
+		<lang lang="sv">
+			<tts>
+				Repeating the command param many times results in many clients created.
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+
+				<param name="class" value="se_tpb_speechgen2.tts.adapters.SpeechServerTTS"/>
+			</tts>
+		</lang>
+		-->
+
 		<lang lang="no">
 			<tts>
 				<param name="command" value="ssh folke@localhost /home/folke/current/nob_narraFil2.tcl --quote=yes"/>

@@ -76,42 +76,14 @@
 		
 		<lang lang="sv">
 			<tts>
+			    <!--  for speech transscription tool: only 6 threads for speechgen! -->
 			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile1.txt -debug 1 -print_header FILESIZE"/>
 			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile2.txt -debug 1 -print_header FILESIZE"/>
 			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile3.txt -debug 1 -print_header FILESIZE"/>
 			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile4.txt -debug 1 -print_header FILESIZE"/>
 			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile5.txt -debug 1 -print_header FILESIZE"/>
 			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile6.txt -debug 1 -print_header FILESIZE"/>
-			    <!--  for speech transscription tool: only 6 threads for speechgen! -->
-                
-               <!-- <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl - -quote=no"/> --> 
-			
-				<!--param name="command" value="ssh folke@192.168.0.51 tclsh current/narraFil2.tcl"/-->
-				<!-- 
-				<param name="command" value="ssh folke@192.168.0.51 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.51 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.51 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.51 tclsh current/narraFil2.tcl - -quote=yes"/>
-				 -->
-				 
-				<!--param name="command" value="ssh folke@192.168.0.52 tclsh current/narraFil2.tcl"/-->
-				<!-- 
-				<param name="command" value="ssh folke@192.168.0.52 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.52 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.52 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.52 tclsh current/narraFil2.tcl - -quote=yes"/>
-				 -->
-				
-				<!--param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl"/-->
-				<!-- 
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-				<param name="command" value="ssh folke@192.168.0.53 tclsh current/narraFil2.tcl - -quote=yes"/>
-			     -->
+
 				<param name="class" value="se_tpb_speechgen2.tts.adapters.FilibusterTTS"/>
 				
 				<param name="timeout" value="1200000"/>				
@@ -119,7 +91,23 @@
 				<param name="characterSubstitutionTables" value="${transformer_dir}/charsubst/character-translation-table.xml,${transformer_dir}/charsubst/character-translation-table_sv.xml"/>
 			</tts>
 		</lang>
-		
+
+		<!--
+		<lang lang="sv">
+			<tts>
+				Repeating the command param many times results in many clients created.
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+
+				<param name="class" value="se_tpb_speechgen2.tts.adapters.SpeechServerTTS"/>
+			</tts>
+		</lang>
+		-->
+
 		<lang lang="no">
 			<tts>
 				<param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/FilibusterBrage/nob_narraFil2.tcl --quote=yes"/>
