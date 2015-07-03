@@ -863,7 +863,13 @@ public class SpeechGen2 extends Transformer {
 
 			
 			ttsOutput = tts.getNext();
-			
+
+			if (ttsOutput == null) {
+				// do not fail with a null pointer exception if the synthesize
+				// slave isn't available
+				return "no sync point available";
+			}
+
 			duration = ttsOutput.getDuration();
 			file = ttsOutput.getFile();
 			introductions.clear();
