@@ -889,6 +889,11 @@ public class SpeechGen2 extends Transformer {
 		 */
 		
 		ttsOutput = tts.getNext();
+		if (ttsOutput == null) {
+			// do not fail with a null pointer exception if the synthesize
+			// slave isn't available
+			return "no sync point available";
+		}
 
 		duration = ttsOutput.getDuration();
 		file = ttsOutput.getFile();
@@ -910,7 +915,6 @@ public class SpeechGen2 extends Transformer {
 			temp = getSilentFile(BEFORE_ANNOUNCEMENT, mSilenceFormat);
 			synchPointFiles.add(temp);
 			synchPointClock = new SmilClock(BEFORE_ANNOUNCEMENT + synchPointClock.millisecondsValue());
-			
 			
 			ttsOutput = tts.getNext();
 			if (ttsOutput == null) {
