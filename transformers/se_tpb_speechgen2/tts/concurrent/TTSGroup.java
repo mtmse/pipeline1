@@ -289,7 +289,12 @@ public class TTSGroup implements TTS, TTSGroupFacade {
 		}
 		String slave_terminated = mTDL.delegateLocalize("SLAVE_TERMINATED", new Object[]{sent});
 		Document syncPoint = myLastInput.getSyncPoint();
-		Location location = (Location) syncPoint.getUserData("location");
+		Location location;
+		if (syncPoint != null) {
+			location = (Location) syncPoint.getUserData("location");
+		} else {
+			location = getNullLocation();
+		}
 		mTDL.delegateMessage(this, slave_terminated, MessageEvent.Type.ERROR, MessageEvent.Cause.SYSTEM, location);
 		String message = "Caused by " + t + ": " + t.getMessage();
 		mTDL.delegateMessage(this, message, Type.DEBUG, MessageEvent.Cause.SYSTEM, null);
@@ -298,6 +303,34 @@ public class TTSGroup implements TTS, TTSGroupFacade {
 		notifyAll();
 	}
 
+	private Location getNullLocation() {
+		return new Location() {
+            @Override
+            public int getLineNumber() {
+                return -1;
+            }
+
+            @Override
+            public int getColumnNumber() {
+                return -2;
+            }
+
+            @Override
+            public int getCharacterOffset() {
+                return -3;
+            }
+
+            @Override
+            public String getPublicId() {
+                return "undefined public id";
+            }
+
+            @Override
+            public String getSystemId() {
+                return "undefined system id";
+            }
+        };
+	}
 
 
 	/**
