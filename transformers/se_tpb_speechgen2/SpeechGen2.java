@@ -866,7 +866,7 @@ public class SpeechGen2 extends Transformer {
 			if (ttsOutput == null) {
 				// do not fail with a null pointer exception if the synthesize
 				// slave isn't available
-				return "no sync point available";
+				return "no sync point available, is the speech server running and reachable?";
 			}
 
 			duration = ttsOutput.getDuration();
@@ -892,7 +892,7 @@ public class SpeechGen2 extends Transformer {
 		if (ttsOutput == null) {
 			// do not fail with a null pointer exception if the synthesize
 			// slave isn't available
-			return "no sync point available";
+			return "no sync point available, is the speech server running and reachable?";
 		}
 
 		duration = ttsOutput.getDuration();
@@ -920,7 +920,7 @@ public class SpeechGen2 extends Transformer {
 			if (ttsOutput == null) {
 				// do not fail with a null pointer exception if the synthesize
 				// slave isn't available
-				return "no sync point available";
+				return "no sync point available, is the speech server running and reachable?";
 			}
 
 			file = ttsOutput.getFile();
