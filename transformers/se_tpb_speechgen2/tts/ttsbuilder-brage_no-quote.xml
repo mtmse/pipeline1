@@ -77,12 +77,12 @@
 		<lang lang="no">
 			<tts>
                 <!--  for speech transscription tool: only 6 threads for speechgen! -->
-			    <param name="command" value="ssh folke@localhost /home/folke/current/nob_narraFil2.tcl --quote=no"/>
-                <param name="command" value="ssh folke@localhost /home/folke/current/nob_narraFil2.tcl --quote=no"/>
-                <param name="command" value="ssh folke@localhost /home/folke/current/nob_narraFil2.tcl --quote=no"/>
-                <param name="command" value="ssh folke@localhost /home/folke/current/nob_narraFil2.tcl --quote=no"/>
-                <param name="command" value="ssh folke@localhost /home/folke/current/nob_narraFil2.tcl --quote=no"/>
-                <param name="command" value="ssh folke@localhost /home/folke/current/nob_narraFil2.tcl --quote=no"/>
+			    <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=no"/>
+                <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=no"/>
+                <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=no"/>
+                <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=no"/>
+                <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=no"/>
+                <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=no"/>
 
 				<param name="class" value="se_tpb_speechgen2.tts.adapters.FilibusterTTS"/>
 				
@@ -95,7 +95,7 @@
 		<!--
 		<lang lang="sv"> <! - - run Tora! - - >
 			<tts>
-				<param name="command" value="ssh folke@localhost /home/folke/bettan/narraFil2.tcl --quote=no"/>
+				<param name="command" value="ssh localhost /opt/langtech/bettan/narraFil2.tcl --quote=no"/>
 
 				<param name="class" value="se_tpb_speechgen2.tts.adapters.FilibusterTTS"/>
 				

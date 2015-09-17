@@ -78,12 +78,12 @@
 		<lang lang="sv">
 			<tts>
                 <! - -  for speech transscription tool: only 6 threads for speechgen! - - >
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile1.txt -debug 1 -print_header FILESIZE"/>
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile2.txt -debug 1 -print_header FILESIZE"/>
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile3.txt -debug 1 -print_header FILESIZE"/>
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile4.txt -debug 1 -print_header FILESIZE"/>
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile5.txt -debug 1 -print_header FILESIZE"/>
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /home/folke/logs/Filibuster/logfile6.txt -debug 1 -print_header FILESIZE"/>
+			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile1.txt -debug 1 -print_header FILESIZE"/>
+			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile2.txt -debug 1 -print_header FILESIZE"/>
+			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile3.txt -debug 1 -print_header FILESIZE"/>
+			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile4.txt -debug 1 -print_header FILESIZE"/>
+			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile5.txt -debug 1 -print_header FILESIZE"/>
+			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile6.txt -debug 1 -print_header FILESIZE"/>
 
 				<param name="class" value="se_tpb_speechgen2.tts.adapters.FilibusterTTS"/>
 				
@@ -110,7 +110,7 @@
 
 		<lang lang="no">
 			<tts>
-				<param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes folke@localhost /home/folke/FilibusterBrage/nob_narraFil2.tcl --quote=yes"/>
+				<param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/FilibusterBrage/nob_narraFil2.tcl --quote=yes"/>
 			
 				<param name="class" value="se_tpb_speechgen2.tts.adapters.FilibusterTTS"/>
 				
