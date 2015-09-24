@@ -17,7 +17,7 @@ public class SpeechServerTTS extends AbstractTTSAdapter {
     public SpeechServerTTS(TTSUtils ttsUtils, Map<String, String> params) {
         super(ttsUtils, params);
 
-        String host = System.getProperty("speech.server.host", "speech.server.host not set in pipeline.user.properties");
+        String host = System.getProperty("speech.server.host", "localhost");
 
         String stringPort = System.getProperty("speech.server.port", "9090");
         int port = Integer.parseInt(stringPort);
