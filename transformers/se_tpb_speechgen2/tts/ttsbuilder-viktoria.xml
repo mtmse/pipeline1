@@ -74,26 +74,6 @@
 			</tts>
 		</lang>
 		
-		<!--
-		<lang lang="sv">
-			<tts>
-                <! - -  for speech transscription tool: only 6 threads for speechgen! - - >
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile1.txt -debug 1 -print_header FILESIZE"/>
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile2.txt -debug 1 -print_header FILESIZE"/>
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile3.txt -debug 1 -print_header FILESIZE"/>
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile4.txt -debug 1 -print_header FILESIZE"/>
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile5.txt -debug 1 -print_header FILESIZE"/>
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl -lang sv -mode batch -textfile - -outdir - -rate 22050 -log /opt/langtech/logs/Filibuster/logfile6.txt -debug 1 -print_header FILESIZE"/>
-
-				<param name="class" value="se_tpb_speechgen2.tts.adapters.FilibusterTTS"/>
-				
-				<param name="timeout" value="1200000"/>				
-				<param name="xslt" value="${transformer_dir}/xslt/filibuster.xsl"/>
-				<param name="characterSubstitutionTables" value="${transformer_dir}/charsubst/character-translation-table.xml,${transformer_dir}/charsubst/character-translation-table_sv.xml"/>
-			</tts>
-		</lang>
-		-->
-
 		<lang lang="sv">
 			<tts>
 				<!-- Repeating the command param many times results in many clients created. -->

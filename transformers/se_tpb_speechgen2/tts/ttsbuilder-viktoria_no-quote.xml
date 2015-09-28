@@ -74,25 +74,6 @@
 			</tts>
 		</lang>
 
-		<!--
-		<lang lang="sv">
-			<tts>
-                <! - -  for speech transscription tool: only 6 threads for speechgen! - - >
-			    <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl --quote=no"/>
-                <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl --quote=no"/>
-                <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl --quote=no"/>
-                <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl --quote=no"/>
-                <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl --quote=no"/>
-                <param name="command" value="ssh -o NoHostAuthenticationForLocalhost=yes localhost /opt/langtech/filibuster/Synthesis/SynthesisCore/filibuster.tcl --quote=no"/>
-
-				<param name="class" value="se_tpb_speechgen2.tts.adapters.FilibusterTTS"/>
-				
-				<param name="timeout" value="1200000"/>				
-				<param name="xslt" value="${transformer_dir}/xslt/filibuster.xsl"/>
-				<param name="characterSubstitutionTables" value="${transformer_dir}/charsubst/character-translation-table.xml,${transformer_dir}/charsubst/character-translation-table_sv.xml"/>
-			</tts>
-		</lang>
-		-->
 
 		<lang lang="sv">
 			<tts>

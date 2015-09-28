@@ -74,26 +74,6 @@
 			</tts>
 		</lang>
 
-		<!--
-		<lang lang="no">
-			<tts>
-               <! - -  for speech transscription tool: only 6 threads for speechgen! - - >
-			    <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=yes"/>
-                <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=yes"/>
-                <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=yes"/>
-                <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=yes"/>
-                <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=yes"/>
-                <param name="command" value="ssh localhost /opt/langtech/current/nob_narraFil2.tcl --quote=yes"/>
-
-				<param name="class" value="se_tpb_speechgen2.tts.adapters.FilibusterTTS"/>
-				
-				<param name="timeout" value="1200000"/>				
-				<param name="xslt" value="${transformer_dir}/xslt/filibuster.xsl"/>
-				<param name="characterSubstitutionTables" value="${transformer_dir}/charsubst/character-translation-table.xml"/>
-			</tts>
-		</lang>
-		-->
-
 		<lang lang="sv">
 			<tts>
 				<!-- Repeating the command param many times results in many clients created. -->
