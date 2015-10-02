@@ -45,9 +45,13 @@ sourceSets {
     }
 }
 
+project.ext {
+    speechServerVersion = '1.0.15'
+}
+
 dependencies {
-    compile files(
-            "lib/client-1.0.14-all.jar",
+    compile  group: 'se.mtm.production.speech.synthesis', name: 'client', version: speechServerVersion, classifier: 'all'
+    compile files (
             "lib/batik-css.jar",
             "lib/batik-util.jar",
             "lib/brailleUtils-catalog.jar",
@@ -96,6 +100,12 @@ dependencies {
             "transformers/int_vspiewak_odt2daisy/lib/JODL.jar",
             "transformers/int_vspiewak_odt2daisy/lib/odt2daisy.jar"
     )
+}
+
+task getSpeechServerClient(type: Copy) {
+    from configurations.compile
+    include '*client*'
+    into "lib"
 }
 
 artifactory {
@@ -173,6 +183,7 @@ artifactoryPublish {
 }
 
 artifactoryPublish.dependsOn all
+processResources.dependsOn getSpeechServerClient
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
