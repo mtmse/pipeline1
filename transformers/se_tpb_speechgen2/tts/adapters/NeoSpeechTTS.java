@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import se_tpb_speechgen2.audio.AudioFiles;
+import se_tpb_speechgen2.audio.ClipTime;
 import se_tpb_speechgen2.tts.TTSException;
 import se_tpb_speechgen2.tts.util.TTSUtils;
 import voiceware.libttsapi;
@@ -103,7 +104,7 @@ public class NeoSpeechTTS extends AbstractTTSAdapter {
 			throw new TTSException(msg);
 		}
 		
-		long audioFileDuration = 0;
+		ClipTime audioFileDuration = new ClipTime();
 		try {
 			audioFileDuration = AudioFiles.getAudioFileDuration(destination);
 		} catch (UnsupportedAudioFileException e) {
@@ -116,7 +117,7 @@ public class NeoSpeechTTS extends AbstractTTSAdapter {
 			throw new TTSException(msg, e);
 		}
 		
-		if (audioFileDuration == 0) {
+		if (audioFileDuration.getTimeInMs() == 0) {
 			String msg = "Error processing file " + destination + 
 			", bailing out!\n" + errorMessageTail;
 			throw new TTSException(msg);

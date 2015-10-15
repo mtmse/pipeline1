@@ -19,6 +19,8 @@ package se_tpb_speechgen2.tts;
 
 import java.io.File;
 
+import se_tpb_speechgen2.audio.ClipTime;
+
 
 /**
  * The general view of the tts output.
@@ -29,14 +31,14 @@ import java.io.File;
 public class TTSOutput {
 	private File file;
 	private int number = -1;
-	private long duration = -1;
+	private ClipTime duration = null;
 	
 	/**
 	 * @param f the file in which this object's audio is stored.
 	 * @param nr the sequence number from the document.
 	 * @param dur the duration of the generated audio.
 	 */
-	public TTSOutput(File f, int nr, long dur) {
+	public TTSOutput(File f, int nr, ClipTime dur) {
 		file = f;
 		number = nr;
 		duration = dur;
@@ -54,7 +56,7 @@ public class TTSOutput {
 	 * Returns the duration of the generated audio.
 	 * @return the duration of the generated audio.
 	 */
-	public long getDuration() {
+	public ClipTime getDuration() {
 		return duration;
 	}
 

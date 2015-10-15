@@ -35,6 +35,7 @@ import org.daisy.pipeline.core.event.MessageEvent.Type;
 import org.daisy.pipeline.core.transformer.TransformerDelegateListener;
 import org.w3c.dom.Document;
 
+import se_tpb_speechgen2.audio.ClipTime;
 import se_tpb_speechgen2.tts.TTS;
 import se_tpb_speechgen2.tts.TTSAnnouncement;
 import se_tpb_speechgen2.tts.TTSException;
@@ -276,7 +277,7 @@ public class TTSGroup implements TTS, TTSGroupFacade {
 		}
 
 		// makes the currently blocking call receive "something"
-		mTTSOutput.put(mOutputIndex, new TTSOutput(myLastInput.getFile(), myLastInput.getNumber(), 0));
+		mTTSOutput.put(mOutputIndex, new TTSOutput(myLastInput.getFile(), myLastInput.getNumber(), new ClipTime()));
 
 
 		// delegates the error message to the transformer
