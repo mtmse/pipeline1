@@ -2,7 +2,7 @@ package se_tpb_speechgen2.audio;
 
 public class ClipTime {
 
-	private Double timeInMs;
+	private Double timeInMs = null;
 
 	public ClipTime() {
 		timeInMs = null;
@@ -12,6 +12,10 @@ public class ClipTime {
 		this.timeInMs = timeInMs;
 	}
 	
+	public ClipTime(ClipTime clipToCopy) {
+		this.timeInMs = clipToCopy.getTimeInMs();
+	}
+
 	public double getTimeInMs() {
 		if(notSet()) {
 			return 0;
@@ -30,5 +34,15 @@ public class ClipTime {
 		} else {
 			return false;
 		}
+	}
+
+	public ClipTime add(ClipTime timeToAdd) {
+		this.setTimeInMs(this.getTimeInMs() + timeToAdd.getTimeInMs());
+		return this;
+	}
+
+	public ClipTime subtract(ClipTime timeToSubtract) {
+		this.setTimeInMs(this.getTimeInMs() - timeToSubtract.getTimeInMs());
+		return this;
 	}
 }
