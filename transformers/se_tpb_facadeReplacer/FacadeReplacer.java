@@ -309,7 +309,7 @@ public class FacadeReplacer extends Transformer implements FilesetErrorHandler {
 		D202NccFile nccFile = (D202NccFile)(fileset.getManifestMember());
 		Iterator it = nccFile.getSpineItems().iterator();
 		SmilFileClockFixer smilFileClockFixer = new SmilFileClockFixer();
-		long totalElapsedTime = 0;
+		SmilClock totalElapsedTime = new SmilClock();
 		
 		// Patch first smil
 		D202SmilFile smilFile = (D202SmilFile)it.next();
@@ -323,11 +323,10 @@ public class FacadeReplacer extends Transformer implements FilesetErrorHandler {
 		while (it.hasNext()) {
     		smilFile = (D202SmilFile)it.next();
     		outFile = new File(outputFolder, prefix + smilFile.getName());
-    		totalElapsedTime += smilFileClockFixer.fix(smilFile.getFile(), outFile, totalElapsedTime);
+    		totalElapsedTime = totalElapsedTime.addTime(smilFileClockFixer.fix(smilFile.getFile(), outFile, totalElapsedTime));
     	}
 		
-		return new SmilClock(totalElapsedTime);
-		
+		return totalElapsedTime;
 	}
 	
 	/*

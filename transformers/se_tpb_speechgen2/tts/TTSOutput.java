@@ -19,7 +19,7 @@ package se_tpb_speechgen2.tts;
 
 import java.io.File;
 
-import se_tpb_speechgen2.audio.ClipTime;
+import org.daisy.util.xml.SmilClock;
 
 
 /**
@@ -31,14 +31,14 @@ import se_tpb_speechgen2.audio.ClipTime;
 public class TTSOutput {
 	private File file;
 	private int number = -1;
-	private ClipTime duration = null;
+	private SmilClock duration = null;
 	
 	/**
 	 * @param f the file in which this object's audio is stored.
 	 * @param nr the sequence number from the document.
 	 * @param dur the duration of the generated audio.
 	 */
-	public TTSOutput(File f, int nr, ClipTime dur) {
+	public TTSOutput(File f, int nr, SmilClock dur) {
 		file = f;
 		number = nr;
 		duration = dur;
@@ -56,7 +56,7 @@ public class TTSOutput {
 	 * Returns the duration of the generated audio.
 	 * @return the duration of the generated audio.
 	 */
-	public ClipTime getDuration() {
+	public SmilClock getDuration() {
 		return duration;
 	}
 

@@ -152,7 +152,6 @@ class ValidatorImplD202 extends ValidatorImplAbstract implements Validator,
 	 * super.validate (which executes any schemas and delegates registered on
 	 * super)
 	 */
-	@SuppressWarnings("unused")
 	private void validate() throws ValidatorException,
 			ValidatorNotSupportedException {
 		FilesetFile mCurrentlyValidatedMember = null;
@@ -186,7 +185,7 @@ class ValidatorImplD202 extends ValidatorImplAbstract implements Validator,
 
 		// do a loop through spine and check timing
 		D202NccFile ncc = (D202NccFile) mFileset.getManifestMember();
-		long calculatedTotalTimeMillis = 0;
+		SmilClock calculatedTotalTimeMillis = new SmilClock();
 
 		// recommended syntax: hh:mm:ss, so default tolerance to 500ms
 		long timeTolerance = 500L;
@@ -207,10 +206,10 @@ class ValidatorImplD202 extends ValidatorImplAbstract implements Validator,
 
 			// test totalElapsedTime
 			if (smil.getStatedTotalElapsedTime() != null) {
-				SmilClock calculatedTotalElapsedTime = new SmilClock(
-						calculatedTotalTimeMillis);
-				if (Math.abs(calculatedTotalElapsedTime.millisecondsValue()
-						- smil.getStatedTotalElapsedTime().millisecondsValue()) > timeTolerance) {
+				SmilClock calculatedTotalElapsedTime = calculatedTotalTimeMillis;
+
+				if ( !calculatedTotalElapsedTime.eqWithinTolerance(smil.getStatedTotalElapsedTime(), timeTolerance)) {
+
 					this.mValidatorListener.report(
 							this,
 							new ValidatorErrorMessage(smil.getFile().toURI(),
@@ -224,13 +223,11 @@ class ValidatorImplD202 extends ValidatorImplAbstract implements Validator,
 			}
 
 			// up the totaltime counter
-			calculatedTotalTimeMillis += smil.getCalculatedDuration()
-					.millisecondsValue();
+			calculatedTotalTimeMillis = calculatedTotalTimeMillis.addTime(smil.getCalculatedDuration());
 
 			// test timeInThisSmil
 			if (smil.getStatedDuration() != null) {
-				if (Math.abs(smil.getCalculatedDuration().millisecondsValue()
-						- smil.getStatedDuration().millisecondsValue()) > timeTolerance) {
+				if ( !smil.getCalculatedDuration().eqWithinTolerance(smil.getStatedDuration(), timeTolerance)) {
 					this.mValidatorListener.report(this,
 							new ValidatorErrorMessage(smil.getFile().toURI(),
 									"expected duration "
@@ -244,13 +241,13 @@ class ValidatorImplD202 extends ValidatorImplAbstract implements Validator,
 		}// spineIterator
 
 		// test ncc stated totaltime against calculated spine totaltime
-		SmilClock calculatedTotalTime = new SmilClock(calculatedTotalTimeMillis);
+		SmilClock calculatedTotalTime = calculatedTotalTimeMillis;
 		// recommended syntax: hh:mm:ss, so round to whole seconds
 
 		// #1770791 NPE if ncc.getStatedDuration() is null
 		if (ncc.getStatedDuration() != null) {
-			if (calculatedTotalTime.secondsValueRounded() != ncc
-					.getStatedDuration().secondsValueRounded()) {
+			if (calculatedTotalTime.secondsValueRoundedDouble() != ncc
+					.getStatedDuration().secondsValueRoundedDouble()) {
 				this.mValidatorListener.report(this, new ValidatorErrorMessage(
 						ncc.getFile().toURI(), "expected total time "
 								+ calculatedTotalTime.toString()

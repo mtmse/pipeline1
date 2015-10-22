@@ -104,8 +104,8 @@ public class TPBAlignerImpl extends Aligner implements DOMErrorHandler {
 	 */
 	private XMLResult tweakTiming(XMLResult result) throws CatalogExceptionNotRecoverable, IOException  {
 		
-		final SmilClock REWIND = new SmilClock(new ClipTime(30));  //millis to subtract from clipBegin values	
-		
+		final SmilClock REWIND = new SmilClock(30.0/1000.0);  //milliseconds to subtract from clipBegin values
+
 		//load
 		Map<String,Object> domConfigMap = LSParserPool.getInstance().getDefaultPropertyMap(Boolean.FALSE);
 		domConfigMap.put("resource-resolver", CatalogEntityResolver.getInstance());
@@ -128,7 +128,7 @@ public class TPBAlignerImpl extends Aligner implements DOMErrorHandler {
 			if(i>0) {
 				Element prev = (Element)nodes.item(i-1);
 				Attr endAttr = prev.getAttributeNodeNS(Namespaces.SMIL_20_NS_URI,"clipEnd");
-				SmilClock newEndClock = new SmilClock(new ClipTime(newBeginClock.getTimeWOPrecisionLoss()).add(new ClipTime(-1)));				
+				SmilClock newEndClock = newBeginClock.addTime(new SmilClock(-1.0/1000.0));
 				endAttr.setNodeValue(newEndClock.toString(SmilClock.FULL));
 			}
 		}
@@ -148,8 +148,11 @@ public class TPBAlignerImpl extends Aligner implements DOMErrorHandler {
 	 * Create a SmilClock which represents inparam smilClock rewinded by second argument.
 	 */
 	private SmilClock rewind(SmilClock smilClock, SmilClock rewind) {		
-		ClipTime newClockValueAfterRewind = new ClipTime(smilClock.getTimeWOPrecisionLoss()).subtract(rewind.getTimeWOPrecisionLoss());
-		return newClockValueAfterRewind.getTimeInMs()<0 ? new SmilClock(0) : new SmilClock(newClockValueAfterRewind);
+		if (smilClock.compareTo(rewind, 0) >= 0) {
+			return smilClock.subtractTime(rewind);
+		} else {
+			return new SmilClock(0);
+		}
 	}
 
 	@Override

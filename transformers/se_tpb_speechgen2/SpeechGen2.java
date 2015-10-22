@@ -157,11 +157,11 @@ public class SpeechGen2 extends Transformer {
 	private Set<String> containsSynch = new HashSet<String>();					// names of elements which may contain sync points.
 
 	// silence
-	private static ClipTime AFTER_LAST;							// milliseconds: silence after last sync point in an audio file
-	private static ClipTime AFTER_FIRST;						// milliseconds: silence after first sync point in an audio file
-	private static ClipTime BEFORE_ANNOUNCEMENT;				// milliseconds: silence before announcement
-	private static ClipTime AFTER_ANNOUNCEMENT;					// milliseconds: silence after announcement
-	private static ClipTime AFTER_REGULAR_PHRASE;				// milliseconds: silence after each phrase
+	private static SmilClock AFTER_LAST;							// milliseconds: silence after last sync point in an audio file
+	private static SmilClock AFTER_FIRST;						// milliseconds: silence after first sync point in an audio file
+	private static SmilClock BEFORE_ANNOUNCEMENT;				// milliseconds: silence before announcement
+	private static SmilClock AFTER_ANNOUNCEMENT;					// milliseconds: silence after announcement
+	private static SmilClock AFTER_REGULAR_PHRASE;				// milliseconds: silence after each phrase
 
 	// misc variables
 	private File outputDir;										// output directory
@@ -175,7 +175,7 @@ public class SpeechGen2 extends Transformer {
 	private QName SMIL_SYNC_ATTR;
 	private boolean doSmilSyncAttributeBasedSyncPointLocation = false; //Which syncpoint location method to use, see #isSynchronizationPoint
 	private boolean failOnError = false;                       //Whether to abort after a TTS error
-	private ClipTime endSilencePadding = new ClipTime(0);  	   // add 0 milliseconds silence to each merged audio file.
+	private SmilClock endSilencePadding = new SmilClock();  	   // add 0 milliseconds silence to each merged audio file.
 	
 	private CountDownLatch countOnce = new CountDownLatch(1);	// thread synchronization
 	private AudioConcatQueue audioConcatQueue = null;           // wav files concatenation and possibly mp3 encoding.
@@ -221,7 +221,7 @@ public class SpeechGen2 extends Transformer {
 			String silencePaddingStr = parameters.remove("endSilencePadding"); 
 			if (silencePaddingStr != null) {
 				try {
-					endSilencePadding.setTimeInMs(Double.parseDouble(silencePaddingStr));
+					endSilencePadding = new SmilClock(Double.parseDouble(silencePaddingStr)/1000.0);
 				} catch (NumberFormatException e) {
 					// nothing
 				}
@@ -847,7 +847,7 @@ public class SpeechGen2 extends Transformer {
 		File temp = null;
 		
 		SmilClock startValue = clock;
-		ClipTime duration;
+		SmilClock duration = new SmilClock();
 
 
 		SmilClock synchPointClock = new SmilClock(0);
@@ -859,7 +859,7 @@ public class SpeechGen2 extends Transformer {
 		if (introductions.size() > 0) {
 			
 			temp = getSilentFile(BEFORE_ANNOUNCEMENT, mSilenceFormat);
-			synchPointClock = new SmilClock(new ClipTime(BEFORE_ANNOUNCEMENT).add(synchPointClock.getTimeWOPrecisionLoss()));
+			synchPointClock = synchPointClock.addTime(BEFORE_ANNOUNCEMENT);
 			synchPointFiles.add(temp);
 
 			
@@ -873,15 +873,15 @@ public class SpeechGen2 extends Transformer {
 			duration = ttsOutput.getDuration();
 			file = ttsOutput.getFile();
 			introductions.clear();
-			if (duration.notSet()) {
+			if (duration.compareTo(new SmilClock(0), 0) == 0) {
 				file.delete();
 			} else {
 				synchPointFiles.add(file);
-				synchPointClock = new SmilClock(new ClipTime(duration).add(synchPointClock.getTimeWOPrecisionLoss()));
+				synchPointClock = synchPointClock.addTime(duration);
 				
 				temp = getSilentFile(AFTER_ANNOUNCEMENT, mSilenceFormat);
 				synchPointFiles.add(temp);
-				synchPointClock = new SmilClock(new ClipTime(AFTER_ANNOUNCEMENT).add(synchPointClock.getTimeWOPrecisionLoss()));
+				synchPointClock = synchPointClock.addTime(AFTER_ANNOUNCEMENT);
 			}
 		}
 
@@ -898,16 +898,15 @@ public class SpeechGen2 extends Transformer {
 
 		duration = ttsOutput.getDuration();
 		file = ttsOutput.getFile();
-		if (duration.getTimeInMs() == 0) {
-			//FIXME Is this ok, cmp double to zero?
+		if ( duration.compareTo(new SmilClock(0), 0) == 0) {
 			file.delete();
 		} else {
-			synchPointClock = new SmilClock(new ClipTime(synchPointClock.getTimeWOPrecisionLoss()).add(duration));
+			synchPointClock = synchPointClock.addTime(duration);
 			synchPointFiles.add(file);
 		}
 		temp = getSilentFile(AFTER_REGULAR_PHRASE, mSilenceFormat);
 		synchPointFiles.add(temp);
-		synchPointClock = new SmilClock(new ClipTime(AFTER_REGULAR_PHRASE).add(synchPointClock.getTimeWOPrecisionLoss()));
+		synchPointClock = synchPointClock.addTime(AFTER_REGULAR_PHRASE);
 		
 		/*
 		 * Terminations
@@ -916,7 +915,7 @@ public class SpeechGen2 extends Transformer {
 
 			temp = getSilentFile(BEFORE_ANNOUNCEMENT, mSilenceFormat);
 			synchPointFiles.add(temp);
-			synchPointClock = new SmilClock(new ClipTime(BEFORE_ANNOUNCEMENT).add(synchPointClock.getTimeWOPrecisionLoss()));
+			synchPointClock = synchPointClock.addTime(BEFORE_ANNOUNCEMENT);
 			
 			ttsOutput = tts.getNext();
 			if (ttsOutput == null) {
@@ -929,16 +928,15 @@ public class SpeechGen2 extends Transformer {
 			duration = ttsOutput.getDuration(); 
 			terminations.clear();
 
-			if (duration.getTimeInMs() == 0) {
-			//FIXME Is this ok, cmp double to zero?
+			if (duration.compareTo(new SmilClock(0), 0) == 0) {
 				file.delete();
 			} else {
 				synchPointFiles.add(file);
-				synchPointClock = new SmilClock(new ClipTime(synchPointClock.getTimeWOPrecisionLoss()).add(duration));
+				synchPointClock = synchPointClock.addTime(duration);
 				
 				temp = getSilentFile(AFTER_ANNOUNCEMENT, mSilenceFormat);
 				synchPointFiles.add(temp);
-				synchPointClock = new SmilClock(new ClipTime(AFTER_ANNOUNCEMENT).add(synchPointClock.getTimeWOPrecisionLoss()));
+				synchPointClock = synchPointClock.addTime(AFTER_ANNOUNCEMENT);
 			}
 		}
 		
@@ -965,7 +963,7 @@ public class SpeechGen2 extends Transformer {
 
 		startValue = clock;
 		workingFiles.addAll(synchPointFiles);
-		clock = new SmilClock(new ClipTime(synchPointClock.getTimeWOPrecisionLoss()).add(clock.getTimeWOPrecisionLoss()));
+		clock = clock.addTime(synchPointClock);
 
 		return startValue; // .toString(SmilClock.FULL);
 	}
@@ -990,7 +988,7 @@ public class SpeechGen2 extends Transformer {
 		currentAudioFile = getCurrentAudioFile();
 		List<File> wf = new ArrayList<File>();
 		wf.addAll(workingFiles);
-		if (endSilencePadding.getTimeInMs() > 0) {
+		if (endSilencePadding.compareTo(new SmilClock(0), 0) > 0) {
 			wf.add(getSilentFile(endSilencePadding, mSilenceFormat));
 		}
 
@@ -1322,10 +1320,10 @@ public class SpeechGen2 extends Transformer {
 	}
 	*/
 	
-	private File getSilentFile(ClipTime timeMillis, AudioFormat format) throws IOException, UnsupportedAudioFileException {
+	private File getSilentFile(SmilClock timeMillis, AudioFormat format) throws IOException, UnsupportedAudioFileException {
 		File target = getNextTempAudioFile(false);
 		target.deleteOnExit();
-		AudioFiles.getSilentAudio(target, Math.round(timeMillis.getTimeInMs()), format);
+		AudioFiles.getSilentAudio(target, timeMillis, format);
 		return target;
 	}
 
@@ -1336,9 +1334,9 @@ public class SpeechGen2 extends Transformer {
 	 * @throws IOException
 	 * @throws UnsupportedAudioFileException
 	 */
-	private void addSilence(ClipTime timeMillis, AudioFormat audioFormat) throws IOException, UnsupportedAudioFileException {
+	private void addSilence(SmilClock timeMillis, AudioFormat audioFormat) throws IOException, UnsupportedAudioFileException {
 		File silentFile = getSilentFile(timeMillis, audioFormat);
-		clock = new SmilClock(new ClipTime(clock.getTimeWOPrecisionLoss().add(new ClipTime(timeMillis))));
+		clock = clock.addTime(timeMillis);
 		workingFiles.add(silentFile);
 	}
 	
@@ -1532,31 +1530,31 @@ public class SpeechGen2 extends Transformer {
 		try {
 			if (node != null) {
 				tmp = node.getTextContent();
-				AFTER_FIRST = new ClipTime(Double.parseDouble(tmp));
+				AFTER_FIRST = new SmilClock(Double.parseDouble(tmp) / 1000.0);
 			}
 
 			node = XPathUtils.selectSingleNode(root, "/sgConfig/silence/afterLast/text()");
 			if (node != null) {
 				tmp = node.getTextContent();
-				AFTER_LAST = new ClipTime(Double.parseDouble(tmp));
+				AFTER_LAST =new SmilClock(Double.parseDouble(tmp) / 1000.0);
 			}
 
 			node = XPathUtils.selectSingleNode(root, "/sgConfig/silence/beforeAnnouncement/text()");
 			if (node != null) {
 				tmp = node.getTextContent();
-				BEFORE_ANNOUNCEMENT = new ClipTime(Double.parseDouble(tmp));
+				BEFORE_ANNOUNCEMENT = new SmilClock(Double.parseDouble(tmp) / 1000.0);
 			}
 
 			node = XPathUtils.selectSingleNode(root, "/sgConfig/silence/afterAnnouncement/text()");
 			if (node != null) {
 				tmp = node.getTextContent();
-				AFTER_ANNOUNCEMENT = new ClipTime(Double.parseDouble(tmp));
+				AFTER_ANNOUNCEMENT = new SmilClock(Double.parseDouble(tmp) / 1000.0);
 			}
 
 			node = XPathUtils.selectSingleNode(root, "/sgConfig/silence/afterRegularPhrase/text()");
 			if (node != null) {
 				tmp = node.getTextContent();
-				AFTER_REGULAR_PHRASE = new ClipTime(Double.parseDouble(tmp));
+				AFTER_REGULAR_PHRASE = new SmilClock(Double.parseDouble(tmp) / 1000.0);
 			}
 		} catch (NumberFormatException e) {
 			String msg = "Unable to parse " + tmp;

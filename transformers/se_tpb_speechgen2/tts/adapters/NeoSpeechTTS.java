@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.daisy.util.xml.SmilClock;
 import se_tpb_speechgen2.audio.AudioFiles;
 import se_tpb_speechgen2.audio.ClipTime;
 import se_tpb_speechgen2.tts.TTSException;
@@ -104,7 +105,7 @@ public class NeoSpeechTTS extends AbstractTTSAdapter {
 			throw new TTSException(msg);
 		}
 		
-		ClipTime audioFileDuration = new ClipTime();
+		SmilClock audioFileDuration = new SmilClock();
 		try {
 			audioFileDuration = AudioFiles.getAudioFileDuration(destination);
 		} catch (UnsupportedAudioFileException e) {
@@ -117,7 +118,7 @@ public class NeoSpeechTTS extends AbstractTTSAdapter {
 			throw new TTSException(msg, e);
 		}
 		
-		if (audioFileDuration.getTimeInMs() == 0) {
+		if (audioFileDuration.compareTo(new SmilClock(0), 0) == 0) {
 			String msg = "Error processing file " + destination + 
 			", bailing out!\n" + errorMessageTail;
 			throw new TTSException(msg);

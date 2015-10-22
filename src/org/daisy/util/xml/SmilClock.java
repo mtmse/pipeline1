@@ -58,7 +58,7 @@ import se_tpb_speechgen2.audio.ClipTime;
  * 
  * @author James Pritchett
  */
-public class SmilClock implements Comparable<Object> {
+public class SmilClock {
     // TODO move this to a more appropriate package
     private static Pattern fullClockPattern = Pattern
             .compile("(npt=)?(\\d+):([0-5]\\d):([0-5]\\d)([.](\\d+))?");
@@ -93,27 +93,29 @@ public class SmilClock implements Comparable<Object> {
             if (m.group(4) == null) {
                 // this.msecValue = (long)(bd.longValue() * 1000);
                 // //(28/11/2006)Piotr: this one truncates fraction
-                this.msecValue.setTimeInMs(bd.multiply(BigDecimal.valueOf((long) 1000))
+                this.msecValue = new ClipTime(bd.multiply(BigDecimal.valueOf((long) 1000))
                         .longValue());
             } else if (m.group(4).equals("ms")) {
-                this.msecValue.setTimeInMs(bd.doubleValue()); // NOTE: This will NOT truncate fraction
+                this.msecValue = new ClipTime(bd.doubleValue()); // NOTE: This will NOT truncate fraction
             } else if (m.group(4).equals("s")) {
                 // this.msecValue = bd.multiply(new
                 // BigDecimal((long)1000)).longValue(); //(28/11/2006)Piotr: the
                 // construcor BigDecimal(long l) missing in java 1.4; ZedVal
                 // feature
-                this.msecValue.setTimeInMs(bd.multiply(BigDecimal.valueOf((long) 1000))
+                this.msecValue = new ClipTime(bd.multiply(BigDecimal.valueOf((long) 1000))
                         .longValue());
             } else if (m.group(4).equals("min")) {
                 // this.msecValue = bd.multiply(new
                 // BigDecimal((long)60000)).longValue(); //(28/11/2006)Piotr: as
                 // above
-                this.msecValue.setTimeInMs(bd.multiply(BigDecimal.valueOf((long) (60*1000))).doubleValue());
+                this.msecValue = new ClipTime(bd.multiply(BigDecimal.valueOf((long) (60*1000))).doubleValue());
             } else if (m.group(4).equals("h")) {
                 // this.msecValue = bd.multiply(new
                 // BigDecimal((long)3600000)).longValue(); //(28/11/2006)Piotr:
                 // as above
-                this.msecValue.setTimeInMs(bd.multiply(BigDecimal.valueOf((long) 60*60*1000)).longValue());
+                this.msecValue = new ClipTime(bd.multiply(BigDecimal.valueOf((long) 60*60*1000)).longValue());
+            } else {
+            	this.msecValue = new ClipTime();
             }
             return;
         }
@@ -121,7 +123,7 @@ public class SmilClock implements Comparable<Object> {
         // test for a full clock value
         m = fullClockPattern.matcher(s.trim());
         if (m.matches()) {
-            this.msecValue.setTimeInMs((Long.parseLong(m.group(2)) * 60*60*1000)
+            this.msecValue = new ClipTime((Long.parseLong(m.group(2)) * 60*60*1000)
                     + (Long.parseLong(m.group(3)) * 60* 1000)
                     + (Long.parseLong(m.group(4)) * 1000)
                     + ((m.group(6) != null) ? new BigDecimal(m.group(5)).multiply(BigDecimal.valueOf(1000)).doubleValue() : 0));
@@ -131,7 +133,7 @@ public class SmilClock implements Comparable<Object> {
         // test for partial clock value
         m = partialClockPattern.matcher(s.trim());
         if (m.matches()) {
-            this.msecValue.setTimeInMs((Long.parseLong(m.group(2)) * 60*1000)
+            this.msecValue = new ClipTime((Long.parseLong(m.group(2)) * 60*1000)
                     + (Long.parseLong(m.group(3)) * 1000)
                     + ((m.group(5) != null) ? new BigDecimal(m.group(4)).multiply(BigDecimal.valueOf(1000)).doubleValue() : 0));
             return;
@@ -142,27 +144,48 @@ public class SmilClock implements Comparable<Object> {
                 + s.trim());
     }
 
+    public SmilClock() {
+    	this.msecValue = new ClipTime();
+    }
+    
     /**
      * @param msec Time value in milliseconds
      */
-    public SmilClock(long msec) {
-        this.msecValue.setTimeInMs(msec);
-    }
-
-    public SmilClock(ClipTime clipTime) {
+//    public SmilClock(long msec) {
+//        this.msecValue = new ClipTime(msec);
+//    }
+    
+    private SmilClock(ClipTime clipTime) {
         this.msecValue = clipTime;
     }
 
+//    public SmilClock(SmilClock toCopy) {
+//    	this.msecValue = toCopy.getTimeWOPrecisionLoss();
+//    }
+//    
     /**
      * @param sec Time value in seconds
      */
     public SmilClock(double sec) {
-        this.msecValue.setTimeInMs(sec * 1000);
+        this.msecValue = new ClipTime(sec * 1000);
+    }
+    
+    public SmilClock addTime(SmilClock addTime) {
+    	return new SmilClock(this.getTimeWOPrecisionLoss().add(addTime.getTimeWOPrecisionLoss()));
     }
 
-    public void setToMiliseconds(double msec) {
-    	this.msecValue.setTimeInMs(msec);
+    public SmilClock subtractTime(SmilClock subtractTime) {
+    	return new SmilClock(this.getTimeWOPrecisionLoss().subtract(subtractTime.getTimeWOPrecisionLoss()));
     }
+
+    //public void setToMiliseconds(double msec) {
+    //	this.msecValue = new ClipTime(msec);
+    //}
+    
+    public boolean notSet() {
+    	return this.msecValue.notSet();
+    }
+
     
     /**
      * Returns clock value in full clock value format (default)
@@ -234,6 +257,9 @@ public class SmilClock implements Comparable<Object> {
         case TIMECOUNT_MSEC:
             s = dfDouble.format(BigDecimal.valueOf(this.msecValue.getTimeInMs())) + "ms";
             break;
+        case RAW_TIMECOUNT_TRUNCATED_MSC:
+        	s =  Long.toString((long) Math.ceil(this.msecValue.getTimeInMs()));
+        	break;
         case TIMECOUNT_SEC:
             s = dfDouble.format(BigDecimal.valueOf(this.msecValue.getTimeInMs() / 1000)) + "s";
             break;
@@ -264,7 +290,7 @@ public class SmilClock implements Comparable<Object> {
     /**
      * Returns clock value in milliseconds
      */
-    public ClipTime getTimeWOPrecisionLoss() {
+    private ClipTime getTimeWOPrecisionLoss() {
         return this.msecValue;
     }
 
@@ -293,10 +319,18 @@ public class SmilClock implements Comparable<Object> {
      * 
      * @return clock value in seconds, rounded to full seconds
      */
-    public long secondsValueRounded() {
+//    public long secondsValueRounded() {
+//        return Math.round(this.secondsValue());
+//    }
+ 
+    public double secondsValueRoundedDouble() {
         return Math.round(this.secondsValue());
     }
 
+
+    
+    // FIXME Hashcode not implemented, should come in pair with "equals"
+    
     // implement equals() so we can test values for equality
     @Override
     public boolean equals(Object otherObject) {
@@ -310,17 +344,27 @@ public class SmilClock implements Comparable<Object> {
             SmilClock other = (SmilClock) otherObject; // Cast it, then
             // compare, using
             // tolerance
-            if (compareTo(other) == 0) {
-                return true;
-            }
+            return eqWithinTolerance(other, msecTolerance);
         } catch (ClassCastException cce) {
             // do nothing
         }
         return false;
     }
+    
+    public boolean eqWithinTolerance(SmilClock other, long msecTolerance) {
+        if (compareTo(other, msecTolerance) == 0) {
+            return true;
+        } else {
+        	return false;
+        }
+    }
 
     // implement Comparable interface so we can sort and compare values
     public int compareTo(Object otherObject) throws ClassCastException {
+    	return compareTo(otherObject, getTolerance());
+    }
+    
+    public int compareTo(Object otherObject, long msecTolerance) throws ClassCastException {
         SmilClock other = (SmilClock) otherObject; // Hope for the best!
         if (Math.abs(other.msecValue.getTimeInMs() - this.msecValue.getTimeInMs()) <= msecTolerance) {        	
             return 0;
@@ -364,7 +408,8 @@ public class SmilClock implements Comparable<Object> {
     public static final int TIMECOUNT_MIN = 6;
     public static final int TIMECOUNT_HR = 7;
     public static final int HUMAN_READABLE = 8;
+    public static final int RAW_TIMECOUNT_TRUNCATED_MSC = 9;
 
-    private ClipTime msecValue; // All values stored in milliseconds
+    private final ClipTime msecValue; // All values stored in milliseconds
     private static long msecTolerance;
 }

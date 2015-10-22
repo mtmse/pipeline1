@@ -2,19 +2,19 @@ package se_tpb_speechgen2.audio;
 
 public class ClipTime {
 
-	private Double timeInMs = null;
+	private final Double timeInMs;
 
 	public ClipTime() {
 		timeInMs = null;
 	}
 	
 	public ClipTime(double timeInMs) {
-		this.timeInMs = timeInMs;
+		this.timeInMs = new Double(timeInMs);
 	}
 	
-	public ClipTime(ClipTime clipToCopy) {
-		this.timeInMs = clipToCopy.getTimeInMs();
-	}
+//	public ClipTime(ClipTime clipToCopy) {
+//		this.timeInMs = new Double(clipToCopy.getTimeInMs());
+//	}
 
 	public double getTimeInMs() {
 		if(notSet()) {
@@ -24,9 +24,9 @@ public class ClipTime {
 		}
 	}
 
-	public void setTimeInMs(double timeInMs) {
-		this.timeInMs = timeInMs;
-	}
+//	public void setTimeInMs(double timeInMs) {
+//		this.timeInMs = new Double(timeInMs);
+//	}
 
 	public boolean notSet() {
 		if(this.timeInMs == null) {
@@ -37,12 +37,12 @@ public class ClipTime {
 	}
 
 	public ClipTime add(ClipTime timeToAdd) {
-		this.setTimeInMs(this.getTimeInMs() + timeToAdd.getTimeInMs());
-		return this;
+		//this.setTimeInMs(this.getTimeInMs() + timeToAdd.getTimeInMs());
+		return new ClipTime(this.getTimeInMs() + timeToAdd.getTimeInMs());
 	}
 
 	public ClipTime subtract(ClipTime timeToSubtract) {
-		this.setTimeInMs(this.getTimeInMs() - timeToSubtract.getTimeInMs());
-		return this;
+		//this.setTimeInMs(this.getTimeInMs() - timeToSubtract.getTimeInMs());
+		return new ClipTime(this.getTimeInMs() - timeToSubtract.getTimeInMs());
 	}
 }
