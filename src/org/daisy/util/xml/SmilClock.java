@@ -176,6 +176,19 @@ public class SmilClock {
     	return new SmilClock(this.getTimeWOPrecisionLoss().subtract(subtractTime.getTimeWOPrecisionLoss()));
     }
 
+    /**
+     * 
+     * Just for compability, broken by design really
+     * 
+     * The SmilClock should only be initialized by values of "seconds", another basic type,
+     * implying another unit type, milliseconds is way to dangerous!
+     * @param msec Time value in milliseconds
+     */
+    @Deprecated
+    public SmilClock(long msec) {
+        this.msecValue = new ClipTime(msec);
+    }
+
     //public void setToMiliseconds(double msec) {
     //	this.msecValue = new ClipTime(msec);
     //}
@@ -294,10 +307,30 @@ public class SmilClock {
     }
 
 	/**
+     * 
+     * Just for compability, broken by design really
+     * 
      * @return clock value in milliseconds
      */
+    @Deprecated
+    public long millisecondsValue() {
+        return (long) millisecondsValue1();
+    }
+
     public long millisecondsValue1() {
         return Math.round(this.msecValue.getTimeInMs());
+    }
+
+    /**
+     * 
+     * Just for compability, broken by design really
+     * 
+     * Enhance type system even further, get rid of log/double altogheter and use some class "Seconds" instead!
+     * @return
+     */
+    @Deprecated
+    public long secondsValueRounded() {
+        return Math.round(this.secondsValue());
     }
 
     /**
