@@ -36,7 +36,6 @@ import org.daisy.pipeline.core.transformer.TransformerDelegateListener;
 import org.daisy.util.xml.SmilClock;
 import org.w3c.dom.Document;
 
-import se_tpb_speechgen2.audio.ClipTime;
 import se_tpb_speechgen2.tts.TTS;
 import se_tpb_speechgen2.tts.TTSAnnouncement;
 import se_tpb_speechgen2.tts.TTSException;

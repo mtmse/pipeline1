@@ -30,7 +30,6 @@ import se_tpb_aligner.align.AlignerException;
 import se_tpb_aligner.util.AudioSource;
 import se_tpb_aligner.util.XMLResult;
 import se_tpb_aligner.util.XMLSource;
-import se_tpb_speechgen2.audio.ClipTime;
 
 /**
  * A wrapper around Kåre Sjölanders aligner.

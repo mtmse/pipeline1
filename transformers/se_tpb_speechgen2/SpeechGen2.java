@@ -98,7 +98,6 @@ import org.xml.sax.SAXParseException;
 import se_tpb_filesetcreator.SrcExtractor;
 import se_tpb_speechgen2.audio.AudioConcatQueue;
 import se_tpb_speechgen2.audio.AudioFiles;
-import se_tpb_speechgen2.audio.ClipTime;
 import se_tpb_speechgen2.tts.TTS;
 import se_tpb_speechgen2.tts.TTSBuilder;
 import se_tpb_speechgen2.tts.TTSBuilderException;

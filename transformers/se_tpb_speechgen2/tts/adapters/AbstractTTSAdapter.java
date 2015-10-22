@@ -30,7 +30,6 @@ import org.daisy.util.xml.SmilClock;
 import org.w3c.dom.Document;
 
 import se_tpb_speechgen2.audio.AudioFiles;
-import se_tpb_speechgen2.audio.ClipTime;
 import se_tpb_speechgen2.tts.TTSException;
 import se_tpb_speechgen2.tts.concurrent.TTSAdapter;
 import se_tpb_speechgen2.tts.util.TTSUtils;

@@ -24,8 +24,6 @@ import java.text.NumberFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import se_tpb_speechgen2.audio.ClipTime;
-
 /**
  * A <code>SmilClock</code> object is a wrapper for a SMIL clock value (time)
  * 

@@ -1,4 +1,4 @@
-package se_tpb_speechgen2.audio;
+package org.daisy.util.xml;
 
 public class ClipTime {
 

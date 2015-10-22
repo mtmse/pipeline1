@@ -11,7 +11,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.daisy.util.xml.SmilClock;
 import se_tpb_speechgen2.audio.AudioFiles;
-import se_tpb_speechgen2.audio.ClipTime;
 import se_tpb_speechgen2.tts.TTSException;
 import se_tpb_speechgen2.tts.util.TTSUtils;
 import voiceware.libttsapi;
