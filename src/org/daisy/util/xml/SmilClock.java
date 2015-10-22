@@ -221,7 +221,7 @@ public class SmilClock {
         dfDouble.setGroupingUsed(false);
 
         // Break out all the pieces ...
-        msec = this.msecValue.getTimeInMs() % 1000;
+        msec = this.msecValue.getTimeInMsRounded() % 1000;
         tmp = (Math.round(this.msecValue.getTimeInMs() - msec)) / 1000;
         sec = tmp % 60;
         tmp = (tmp - sec) / 60;
@@ -238,7 +238,8 @@ public class SmilClock {
             }
             break;
         case PARTIAL:
-            // KNOWN BUG: This will return misleading results for clock values >
+            // TODO : Comment probably wrong! (Comment older than "previous" code..??
+        	// KNOWN BUG: This will return misleading results for clock values >
             // 59:59.999
             // WORK AROUND: Caller is responsible for testing that this is an
             // appropriate format

@@ -11,10 +11,6 @@ public class ClipTime {
 	public ClipTime(double timeInMs) {
 		this.timeInMs = new Double(timeInMs);
 	}
-	
-//	public ClipTime(ClipTime clipToCopy) {
-//		this.timeInMs = new Double(clipToCopy.getTimeInMs());
-//	}
 
 	public double getTimeInMs() {
 		if(notSet()) {
@@ -23,10 +19,10 @@ public class ClipTime {
 			return timeInMs;
 		}
 	}
-
-//	public void setTimeInMs(double timeInMs) {
-//		this.timeInMs = new Double(timeInMs);
-//	}
+	
+	public double getTimeInMsRounded() {
+		return Math.round(this.getTimeInMs());
+	}
 
 	public boolean notSet() {
 		if(this.timeInMs == null) {
