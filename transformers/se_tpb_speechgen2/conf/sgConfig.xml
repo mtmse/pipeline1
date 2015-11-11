@@ -35,9 +35,9 @@
 		<afterRegularPhrase>200</afterRegularPhrase> -->
 		<afterLast>1000</afterLast>
 		<afterFirst>200</afterFirst>
-		<beforeAnnouncement>79</beforeAnnouncement>
-		<afterAnnouncement>79</afterAnnouncement>
-		<afterRegularPhrase>179</afterRegularPhrase>
+		<beforeAnnouncement>80</beforeAnnouncement>
+		<afterAnnouncement>80</afterAnnouncement>
+		<afterRegularPhrase>180</afterRegularPhrase>
 	</silence>
 	
 </sgConfig>
