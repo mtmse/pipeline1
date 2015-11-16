@@ -67,6 +67,16 @@
 		
 		<lang lang="en">
 			<tts  default="true">
+				<!-- Repeating the command param many times results in many clients created. -->
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+				<param name="command" value="not used"/>
+
 				<param name="class" value="se_tpb_speechgen2.tts.adapters.NeoSpeechTTS"/>
 				<param name="xslt" value="${transformer_dir}/xslt/neospeech.xsl"/>
 				<param name="characterSubstitutionTables" value="${transformer_dir}/charsubst/character-translation-table.xml,${transformer_dir}/charsubst/character-translation-table_en.xml"/>
