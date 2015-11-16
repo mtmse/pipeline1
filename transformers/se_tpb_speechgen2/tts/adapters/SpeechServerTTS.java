@@ -38,7 +38,7 @@ public class SpeechServerTTS extends AbstractTTSAdapter {
             sound = client.synthesise(line);
         }
         if (sound.isNotAccepted()) {
-            throw new TTSException("line not accepted");
+            throw new TTSException("line: " + line + " is not accepted");
         }
 
         retries = 0;
@@ -47,7 +47,7 @@ public class SpeechServerTTS extends AbstractTTSAdapter {
             sound = client.synthesise(line);
         }
         if (sound.isTimeout()) {
-            throw new TTSException("timeout");
+            throw new TTSException("timeout for line: " + line);
         }
 
         writeWavFile(sound, destination);
