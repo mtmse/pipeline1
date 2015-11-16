@@ -234,7 +234,7 @@ public class SmilClock {
         dfDouble.setGroupingUsed(false);
 
         // Break out all the pieces ...
-        msec = this.msecValue.getTimeInMsRounded() % 1000;
+        msec = this.msecValue.roundedInMilliSeconds().getTimeInMs() % 1000;
         tmp = (Math.round(this.msecValue.getTimeInMs() - msec)) / 1000;
         sec = tmp % 60;
         tmp = (tmp - sec) / 60;
@@ -314,11 +314,11 @@ public class SmilClock {
      */
     @Deprecated
     public long millisecondsValue() {
-        return (long) millisecondsValue1();
+        return (long) millisecondsValueAsLong();
     }
 
-    public long millisecondsValue1() {
-        return Math.round(this.msecValue.getTimeInMs());
+    public long millisecondsValueAsLong() {
+        return Math.round(this.msecValue.roundedInMilliSeconds().getTimeInMs());
     }
 
     /**
@@ -358,8 +358,14 @@ public class SmilClock {
     public double secondsValueRoundedDouble() {
         return Math.round(this.secondsValue());
     }
+    
+    public SmilClock roundToMSPrecision() {
+    	return new SmilClock(this.getTimeWOPrecisionLoss().roundedInMilliSeconds());
+    }
 
-
+    public SmilClock floorMSPrecision() {
+    	return new SmilClock(this.getTimeWOPrecisionLoss().floorInMilliSeconds());
+    }
     
     // FIXME Hashcode not implemented, should come in pair with "equals"
     

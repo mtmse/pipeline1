@@ -19,9 +19,13 @@ public class ClipTime {
 			return timeInMs;
 		}
 	}
-	
-	public double getTimeInMsRounded() {
-		return Math.round(this.getTimeInMs());
+
+	public ClipTime roundedInMilliSeconds() {
+		return new ClipTime(Math.round(this.getTimeInMs()));
+	}
+
+	public ClipTime floorInMilliSeconds() {
+		return new ClipTime(Math.floor(this.getTimeInMs()));
 	}
 
 	public boolean notSet() {
@@ -33,12 +37,10 @@ public class ClipTime {
 	}
 
 	public ClipTime add(ClipTime timeToAdd) {
-		//this.setTimeInMs(this.getTimeInMs() + timeToAdd.getTimeInMs());
 		return new ClipTime(this.getTimeInMs() + timeToAdd.getTimeInMs());
 	}
 
 	public ClipTime subtract(ClipTime timeToSubtract) {
-		//this.setTimeInMs(this.getTimeInMs() - timeToSubtract.getTimeInMs());
 		return new ClipTime(this.getTimeInMs() - timeToSubtract.getTimeInMs());
 	}
 }

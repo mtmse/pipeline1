@@ -40,7 +40,7 @@ public class SilenceAudioInputStream extends AudioInputStream {
     public SilenceAudioInputStream(AudioFormat format, SmilClock dur)	{
 		super(new SilenceInputStream(format),
 		      format,
-			  calcFrameLengthFromDuration(dur.millisecondsValue1(), format.getFrameRate()) );
+			  calcFrameLengthFromDuration(dur.millisecondsValueAsLong(), format.getFrameRate()) );
 	}
 
 
