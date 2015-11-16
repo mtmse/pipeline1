@@ -598,8 +598,8 @@ public class SpeechGen2 extends Transformer {
 					progress(progress);
 					
 					// create the new startElement, i e. the same element + smil-attributes.
-					SmilClock smilStartClipTime = smilTimeStartValue.floorMSPrecision();
-					SmilClock smilEndClipTime = clock.floorMSPrecision();
+					SmilClock smilStartClipTime = smilTimeStartValue.floorToMSPrecision();
+					SmilClock smilEndClipTime = clock.floorToMSPrecision();
 
 					se = addSmilAttrs(event, smilStartClipTime, smilEndClipTime);
 					writeEvent(se);

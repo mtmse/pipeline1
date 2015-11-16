@@ -20,11 +20,11 @@ public class ClipTime {
 		}
 	}
 
-	public ClipTime roundedInMilliSeconds() {
+	public ClipTime roundedToMilliSeconds() {
 		return new ClipTime(Math.round(this.getTimeInMs()));
 	}
 
-	public ClipTime floorInMilliSeconds() {
+	public ClipTime floorToMilliSeconds() {
 		return new ClipTime(Math.floor(this.getTimeInMs()));
 	}
 
