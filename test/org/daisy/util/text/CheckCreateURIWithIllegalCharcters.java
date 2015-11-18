@@ -5,114 +5,112 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
 public class CheckCreateURIWithIllegalCharcters {
 
-    private String urlSample;
+	private String URILegalCharacters;
+	private String URIIllegalCharacters;
 
-    public CheckCreateURIWithIllegalCharcters(String urlSample) {
-        this.urlSample = urlSample;
-    }
+	public CheckCreateURIWithIllegalCharcters(String URILegalCharacters, String URIIllegalCharacters) {
+		this.URILegalCharacters = URILegalCharacters;
+		this.URIIllegalCharacters = URIIllegalCharacters;
+	}
 
-    @Test
-    public void testSyntax() throws Exception {
-        URI expected = new URI(urlSample);
+	@Test
+	public void testCreateURI() throws Exception {
+		URI expected = new URI("");
+		URI actual = new URI("");
+		;
+		try {
+			expected = new URI(URILegalCharacters);
 
-        URI actual = URIUtils.createURI(urlSample);
+			actual = URIUtils.createURI(URIIllegalCharacters);
 
-        assertThat(actual, is(expected));
-    }
+		} catch (URISyntaxException e) {
+			fail("Syntax exception with expected URI: " + expected + "  " + "Actual: " + actual + "\n" + e.getMessage()
+					+ "\n" + e.getStackTrace());
+		}
+		assertThat(actual, is(expected));
+	}
 
-    @Parameterized.Parameters //(name = "{index}: URI [{0}]={0}")
-    public static Collection<String[]> validURIs() {
-        List<String[]> validURIs = new LinkedList<String[]>();
-        validURIs.add(new String[]{"http://example.org/aaa/bbb#ccc"});
+	@Parameterized.Parameters // (name = "{index}: URI [{0}]={0}")
+	public static Collection<String[]> pairOfURILegalandIllegal() {
 
-        validURIs.add(new String[]{"http://example.org/aaa/bbb#ccc"});
-        validURIs.add(new String[]{"mailto:local@domain.org"});
-        validURIs.add(new String[]{"mailto:local@domain.org#frag"});
-        validURIs.add(new String[]{"HTTP://EXAMPLE.ORG/AAA/BBB#CCC"});
-        validURIs.add(new String[]{"//example.org/aaa/bbb#ccc"});
-        validURIs.add(new String[]{"/aaa/bbb#ccc"});
-        validURIs.add(new String[]{"bbb#ccc"});
-        validURIs.add(new String[]{"#ccc"});
-        validURIs.add(new String[]{"#"});
-        validURIs.add(new String[]{"/"});
-        validURIs.add(new String[]{"http://example.org/aaa/bbb#ccc"});
-        validURIs.add(new String[]{"http://example.org/aaa/bbb#ccc"});
-        validURIs.add(new String[]{"/"});
-        validURIs.add(new String[]{"aaa/bbb"});
-        validURIs.add(new String[]{"http://example.org:80/aaa/bbb#ccc"});
-        validURIs.add(new String[]{"http://example.org:/aaa/bbb#ccc"});
-        validURIs.add(new String[]{"http://example.org./aaa/bbb#ccc"});
-        validURIs.add(new String[]{"http://example.123./aaa/bbb#ccc"});
-        validURIs.add(new String[]{"http://example.org"});
-        validURIs.add(new String[]{"http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]:80/index.html"});
-        validURIs.add(new String[]{"http://[1080:0:0:0:8:800:200C:417A]/index.html"});
-        validURIs.add(new String[]{"http://[3ffe:2a00:100:7031::1]"});
-        validURIs.add(new String[]{"http://[1080::8:800:200C:417A]/foo"});
-        validURIs.add(new String[]{"http://[::192.9.5.5]/ipng"});
-        validURIs.add(new String[]{"http://[::FFFF:129.144.52.38]:80/index.html"});
-        validURIs.add(new String[]{"http://[2010:836B:4179::836B:4179]"});
-        validURIs.add(new String[]{"//[2010:836B:4179::836B:4179]"});
-        validURIs.add(new String[]{"./aaa"});
-        validURIs.add(new String[]{"../aaa"});
-        validURIs.add(new String[]{"g:h"});
-        validURIs.add(new String[]{"g"});
-        validURIs.add(new String[]{"./g"});
-        validURIs.add(new String[]{"g/"});
-        validURIs.add(new String[]{"/g"});
-        validURIs.add(new String[]{"//g"});
-        validURIs.add(new String[]{"?y"});
-        validURIs.add(new String[]{"g?y"});
-        validURIs.add(new String[]{"#s"});
-        validURIs.add(new String[]{"g#s"});
-        validURIs.add(new String[]{"g?y#s"});
-        validURIs.add(new String[]{";x"});
-        validURIs.add(new String[]{"g;x"});
-        validURIs.add(new String[]{"g;x?y#s"});
-        validURIs.add(new String[]{"."});
-        validURIs.add(new String[]{"./"});
-        validURIs.add(new String[]{".."});
-        validURIs.add(new String[]{"../"});
-        validURIs.add(new String[]{"../g"});
-        validURIs.add(new String[]{"../.."});
-        validURIs.add(new String[]{"../../"});
-        validURIs.add(new String[]{"../../g"});
-        validURIs.add(new String[]{"../../../g"});
-        validURIs.add(new String[]{"../../../../g"});
-        validURIs.add(new String[]{"/./g"});
-        validURIs.add(new String[]{"/../g"});
-        validURIs.add(new String[]{"g."});
-        validURIs.add(new String[]{".g"});
-        validURIs.add(new String[]{"g.."});
-        validURIs.add(new String[]{"..g"});
-        validURIs.add(new String[]{"./../g"});
-        validURIs.add(new String[]{"./g/."});
-        validURIs.add(new String[]{"g/./h"});
-        validURIs.add(new String[]{"g/../h"});
-        validURIs.add(new String[]{"g;x=1/./y"});
-        validURIs.add(new String[]{"g;x=1/../y"});
-        validURIs.add(new String[]{"g?y/./x"});
-        validURIs.add(new String[]{"g?y/../x"});
-        validURIs.add(new String[]{"g#s/./x"});
-        validURIs.add(new String[]{"g#s/../x"});
-        validURIs.add(new String[]{""});
-        validURIs.add(new String[]{"A'C"});
-        validURIs.add(new String[]{"A$C"});
-        validURIs.add(new String[]{"A@C"});
-        validURIs.add(new String[]{"http://example/Andr&#567"});
-        validURIs.add(new String[]{"file:///C:/DEV/Haskell/lib/HXmlToolbox-3.01/examples/"});
-        validURIs.add(new String[]{"http://46229EFFE16A9BD60B9F1BE88B2DB047ADDED785/demo.mp3"});
-        validURIs.add(new String[]{"http://example++/"});
+		List<String[]> pairOfURILegalandIllegal = new LinkedList<String[]>();
 
-        return validURIs;
-    }
+		// Various illegal characters
+		pairOfURILegalandIllegal.add(new String[] { "A%20C", "A C" });
+		pairOfURILegalandIllegal.add(new String[] { "A%22C", "A\"C" });
+		pairOfURILegalandIllegal.add(new String[] { "A%60C", "A`C" });
+		pairOfURILegalandIllegal.add(new String[] { "A%3CC", "A<C" });
+		pairOfURILegalandIllegal.add(new String[] { "A%3EC", "A>C" });
+		pairOfURILegalandIllegal.add(new String[] { "A%5EC", "A^C" });
+		pairOfURILegalandIllegal.add(new String[] { "A%5CC", "A\\C" });
+		pairOfURILegalandIllegal.add(new String[] { "A%7BC", "A{C" });
+		pairOfURILegalandIllegal.add(new String[] { "A%7CC", "A|C" });
+		pairOfURILegalandIllegal.add(new String[] { "A%7DC", "A}C" });
+		pairOfURILegalandIllegal.add(new String[] { "A%5BC", "A[C" });
+		pairOfURILegalandIllegal.add(new String[] { "A%5DC", "A]C" });
+		pairOfURILegalandIllegal.add(new String[] { "A日本C", "A日本C" });
+		pairOfURILegalandIllegal.add(new String[] { "A日本C", "A%E6%97%A5%E6%9C%ACC" });
+		// In user info
+		pairOfURILegalandIllegal
+				.add(new String[] { "http://us%20er@host:80/path?query#frag", "http://us er@host:80/path?query#frag" });
+		pairOfURILegalandIllegal.add(
+				new String[] { "http://us%20er@host:80/path?query#frag", "http://us%20er@host:80/path?query#frag" });
+		// In host
+		pairOfURILegalandIllegal
+				.add(new String[] { "http://user@ho%20st:80/path?query#frag", "http://user@ho st:80/path?query#frag" });
+		pairOfURILegalandIllegal.add(
+				new String[] { "http://user@ho%20st:80/path?query#frag", "http://user@ho%20st:80/path?query#frag" });
+		// In path
+		pairOfURILegalandIllegal
+				.add(new String[] { "http://user@host:80/pa%20th?query#frag", "http://user@host:80/pa th?query#frag" });
+		pairOfURILegalandIllegal.add(
+				new String[] { "http://user@host:80/pa%20th?query#frag", "http://user@host:80/pa%20th?query#frag" });
+		// In query
+		pairOfURILegalandIllegal
+				.add(new String[] { "http://user@host:80/path?que%20ry#frag", "http://user@host:80/path?que ry#frag" });
+		pairOfURILegalandIllegal.add(
+				new String[] { "http://user@host:80/path?que%20ry#frag", "http://user@host:80/path?que%20ry#frag" });
+		// In fragement
+		pairOfURILegalandIllegal
+				.add(new String[] { "http://user@host:80/path?query#fr%20ag", "http://user@host:80/path?query#fr ag" });
+		pairOfURILegalandIllegal.add(
+				new String[] { "http://user@host:80/path?query#fr%20ag", "http://user@host:80/path?query#fr%20ag" });
+		// Decode slash in path
+		pairOfURILegalandIllegal.add(new String[] { "file:///c:/dir/file.tmp", "file:///c:/dir%2Ffile.tmp" });
+		// in first segment of a relative
+		pairOfURILegalandIllegal.add(new String[] { "rel/path", "rel%2Fpath" });
+		// in first char of a relative
+		pairOfURILegalandIllegal.add(new String[] { "/relpath", "%2Frelpath" });
+		pairOfURILegalandIllegal.add(new String[] { "file:///c:/dir/file.tmp", "file:///c:/dir%2ffile.tmp" });
+		 // in first segment of a relative
+		pairOfURILegalandIllegal.add(new String[] { "rel/path", "rel%2fpath" });
+		 // in first char of a relative
+		pairOfURILegalandIllegal.add(new String[] { "/relpath", "%2frelpath" });
+		// Keep colon encoded in relative path, decode otherwise
+		// in an authorized place
+		pairOfURILegalandIllegal.add(new String[] { "file:///c:/dir/file.tmp", "file:///c%3A/dir/file.tmp" });
+		// in an authorized place (hidden by percent encoded slash)
+		pairOfURILegalandIllegal.add(new String[] { "/:", "%2f%3a" });
+		// in first segment of a relative
+		pairOfURILegalandIllegal.add(new String[] { "rel%3Apath", "rel%3Apath" });
+		// many times in first segment of a relative
+		pairOfURILegalandIllegal.add(new String[] { "rel%3Apath%3Apath", "rel%3Apath%3Apath" });
+		// encoded percent char
+		pairOfURILegalandIllegal.add(new String[] { "%253A", "%253A" });
+
+		return pairOfURILegalandIllegal;
+	}
 }
