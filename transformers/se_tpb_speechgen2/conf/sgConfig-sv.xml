@@ -42,7 +42,7 @@
              
              Example for 22050 Hz sampling frequency:
              
-             Time resolution: 1/22050 -> samples/secound = 22050, since we are using ms as our
+             Time resolution: 1/22050 -> samples/second = 22050, since we are using milliseconds as our
              time base, use that instead for simplicity and clarity:
               22.05 samples/millisecond. However we can only generate silence times of whole samples!
               So if we request 1 ms silence it will in reality be truncated to 22 samples and the
@@ -55,18 +55,18 @@
               
               Example 0.00227ms * 10000 = 22.7ms
               
-              This may still not look so catastrophic but 1 ms is the "nice" error case for sampling a frequency of 22050Hz.
+              This may still not look so catastrophic but 1 ms is the "nice" error case for a sampling frequency of 22050Hz.
               Using the simplest worst case scenario instead, 19ms:
               
               22.05 samples/millisecond * 19 milliseconds = 418.95 samples
               
-              this will resulting in truncating away almost the whole time for one sample, resulting in a silnece time of:
+              this will resulting in truncating away almost the whole time for one sample, resulting in a silence time of:
               
               22/22.05*19 milliseconds = 18.957 ms, which gives a time error of 19 - 18.957 = 0.043ms
               
-              As before, for a book with 10000 syncpoints the resulting total error will be:
+              As before, for a book with 10000 syncpoints, the resulting total error will be:
               
-              0.043ms * 10000 = 430ms, we are closing in on errors in the whole second range.
+              0.043ms * 10000 = 430ms, and now we are in the seconds error region! Really bad!!
               
               To avoid this, change the way the code makes blatantly assumptions about what silence times
               it gets in a discrete world, or as a temporary measure, make the silence times adding up to
