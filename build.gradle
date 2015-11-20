@@ -2,7 +2,9 @@
 version = "${version}"
 group = "${mavenGroupId}"
 
-ant.importBuild 'build.xml'
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: "com.jfrog.artifactory"
 
 buildscript {
     repositories {
@@ -13,9 +15,11 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: "com.jfrog.artifactory"
+ant.importBuild('build.xml') { antTargetName ->
+    "ant-" + antTargetName
+}
+
+artifactoryPublish.dependsOn "ant-all"
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
@@ -182,7 +186,6 @@ artifactoryPublish {
     publications(publishing.publications.mavenScripts)
 }
 
-artifactoryPublish.dependsOn all
 processResources.dependsOn getSpeechServerClient
 
 task wrapper(type: Wrapper) {
