@@ -3,8 +3,16 @@ version = "${version}"
 group = "${mavenGroupId}"
 
 apply plugin: 'java'
+
+//tasks.withType(Compile) {
+//    options.encoding = "UTF-8"
+//}
+
 apply plugin: 'maven-publish'
 apply plugin: "com.jfrog.artifactory"
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
 
 buildscript {
     repositories {
