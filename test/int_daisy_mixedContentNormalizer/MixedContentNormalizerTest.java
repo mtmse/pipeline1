@@ -17,17 +17,18 @@ import static org.hamcrest.CoreMatchers.is;
 
 public class MixedContentNormalizerTest {
 
-	private static final int BUFFER_SIZE = 1024;
-
 	@Test
 	public void testNormalizer_01() throws TransformerRunException, TransformerDisabledException, IOException {
 		
+		// Use same line endings for all os environments, golden master created using *nix-style line endings
+		System.setProperty("line.separator", "\n");
+
 		Map<String,String> parameters = new HashMap<String, String>();
 		 
 		String testNormalizeOutputName = "test/int_daisy_mixedContentNormalizer/test_normalize_output.xml";
-		String testNormalizeInput = "test/int_daisy_mixedContentNormalizer/test_normalize_input.xml";
-        String testGoldenMaster = "test/int_daisy_mixedContentNormalizer/golden_master_test_normalize.xml";
-		parameters.put("input", testNormalizeInput);
+		String testNormalizeInputName = "test/int_daisy_mixedContentNormalizer/test_normalize_input.xml";
+        String testGoldenMasterName = "test/int_daisy_mixedContentNormalizer/golden_master_test_normalize.xml";
+		parameters.put("input", testNormalizeInputName);
 		parameters.put("output", testNormalizeOutputName);
 		parameters.put("addSyncPoints", "true");
 		parameters.put("implementation", "dom");
@@ -35,7 +36,7 @@ public class MixedContentNormalizerTest {
 		MixedContentNormalizer n = new MixedContentNormalizer(null, false);
 		n.execute(parameters);
 		
-		File goldenMaster = new File(testGoldenMaster);
+		File goldenMaster = new File(testGoldenMasterName);
 		File testOutput = new File(testNormalizeOutputName);
 		assertThat(FileUtils.contentEquals(goldenMaster, testOutput), is(Boolean.TRUE));
 	}
